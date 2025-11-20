@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LiftBuddy</title>
-  <link rel="icon" href="assets/liftbuddy.png" />
-  <link rel="stylesheet" href="style.css" />
-  <style>
-@import url('https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap');
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LiftBuddy</title>
+    <link rel="icon" href="assets/liftbuddy.png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap");
+    </style>
+  </head>
+  <body>
+    <div id="splash">
+      <h1 class="logo">LiftBuddy</h1>
+      <!--<img src="assets/liftbuddy.png" alt="LiftBuddy Logo" class="logo-image" />-->
+    </div>
 
-  <!-- Ladebildschirm -->
-  <div id="splash">
-    <h1 class="logo">LiftBuddy</h1>
-    <!--<img src="assets/liftbuddy.png" alt="LiftBuddy Logo" class="logo-image" />-->
-  </div>
+    <div id="app" class="hidden">
+      <nav>
+        <button data-page="menu">
+          <img alt="Burgermenu" src="assets/menu.svg" />
+        </button>
+        <button data-page="home">
+          <img alt="Home-Button" src="assets/home.svg" />
+        </button>
+        <button data-page="settings">
+          <img alt="Settings-Button" src="assets/settings.svg" />
+        </button>
+        <button data-page="profile">
+          <img alt="Profile-Button" src="assets/profile.svg" />
+        </button>
+      </nav>
 
-  <!-- Haupt-App -->
-  <div id="app" class="hidden">
+      <main id="content"></main>
+    </div>
 
-    <!-- Navigation -->
-    <nav>
-      <button data-page="menu"><img alt="Burgermenu" src="assets/menu.svg"></button>
-      <button data-page="newWorkout"><img alt="Home-Button" src="assets/home.svg"></button>
-      <button data-page="history"><img alt="Settings-Button" src="assets/settings.svg"></button>
-      <button data-page="Home"><img alt="Profile-Button" src="assets/profile.svg"></button>
-    </nav>
-
-    <!-- Inhalt -->
-    <main id="content"></main>
-
-  </div>
-
-  <script src="app.js"></script>
-</body>
+    <script type="module" src="app.js"></script>
+  </body>
 </html>

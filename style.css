@@ -1,7 +1,7 @@
 :root {
-    --primary-color: linear-gradient(#AECEFF 0%, #5884C7 100%);
-    --primary-text-color: #1A1A1A;
-    --secondary-color: #F5F1E6;
+  --primary-color: linear-gradient(#aeceff 0%, #5884c7 100%);
+  --primary-text-color: #1a1a1a;
+  --secondary-color: #f5f1e6;
 }
 
 * {
@@ -15,10 +15,19 @@
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family:  "Jolly Lodger", Arial, sans-serif;
+  font-family: "Jolly Lodger", Arial, sans-serif;
   background: var(--primary-color);
   color: var(--primary-text-color);
   display: flex;
@@ -26,7 +35,6 @@ body {
   min-height: 100vh;
 }
 
-/* Splashscreen */
 #splash {
   position: fixed;
   inset: 0;
@@ -39,7 +47,7 @@ body {
 .logo {
   font-size: 58px;
   animation: fadeIn 2s ease-in-out;
-  color: #1A1A1A;
+  color: #1a1a1a;
 }
 
 .hidden {
@@ -47,13 +55,17 @@ body {
 }
 
 main#content {
-  padding: 20px;
+  padding: 12px;
   width: 100%;
   max-width: 600px;
   margin: auto;
 }
 
-/* Navigation */
+#content h1 {
+  text-align: center;
+  font-size: 48px;
+}
+
 nav {
   display: flex;
   /* flex-wrap: wrap; */
@@ -78,7 +90,31 @@ nav button:hover {
   background: #444;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+.workout-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
+
+.workout-card {
+  background: #222;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  color: white;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.workout-card h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.add-workout-btn {
+  width: 30px;
+}
+
