@@ -1,6 +1,7 @@
 :root {
     --primary-color: linear-gradient(#AECEFF 0%, #5884C7 100%);
     --primary-text-color: #1A1A1A;
+    --secondary-color: #F5F1E6;
 }
 
 * {
@@ -13,7 +14,6 @@
     padding: 12px 20px;
   }
 }
-
 
 body {
   margin: 0;
@@ -37,7 +37,7 @@ body {
 }
 
 .logo {
-  font-size: 42px;
+  font-size: 58px;
   animation: fadeIn 2s ease-in-out;
   color: #1A1A1A;
 }
@@ -56,7 +56,7 @@ main#content {
 /* Navigation */
 nav {
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   justify-content: space-around;
   gap: 10px;
   background: #222;
