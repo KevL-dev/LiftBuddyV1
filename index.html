@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LiftBuddy</title>
+  <link rel="icon" href="assets/liftbuddy.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ladebildschirm -->
+  <div id="splash">
+    <h1 class="logo">LiftBuddy</h1>
+  </div>
+
+  <!-- Haupt-App -->
+  <div id="app" class="hidden">
+
+    <!-- Navigation -->
+    <nav>
+      <button data-page="home">Home</button>
+      <button data-page="newWorkout">Neues Workout</button>
+      <button data-page="history">Verlauf</button>
+    </nav>
+
+    <!-- Inhalt -->
+    <main id="content"></main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
