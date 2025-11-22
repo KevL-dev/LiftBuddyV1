@@ -1,6 +1,5 @@
 export function loadRegisterPage(content) {
     let html = `<div><h1>LiftBuddy</h1>
-                <p>get better everyday</p>
                 </div>
                 
                 <div class="register-form"> 

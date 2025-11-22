@@ -1,9 +1,9 @@
-import { loadHomePage } from "./pages/home.js";
-import { loadNewWorkoutPage } from "./pages/newWorkout.js";
-import { loadSettingsPage } from "./pages/settings.js";
-import { loadProfilePage } from "./pages/profile.js";
-import { loadRegisterPage } from "./pages/register.js";
-import { loadMenuPage } from "./pages/menu.js";
+import { loadHomePage } from "../frontend/pages/home.js";
+import { loadNewWorkoutPage } from "../frontend/pages/newWorkout.js";
+import { loadSettingsPage } from "../frontend/pages/settings.js";
+import { loadProfilePage } from "../frontend/pages/profile.js";
+import { loadRegisterPage } from "../frontend/pages/register.js";
+import { loadMenuPage } from "../frontend/pages/menu.js";
 
 window.addEventListener("load", () => {
   setTimeout(() => {
