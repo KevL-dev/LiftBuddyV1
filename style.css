@@ -101,7 +101,7 @@ nav button:hover {
   padding: 12px;
   border-radius: 10px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   color: white;
   display: flex;
   flex-direction: row;
@@ -114,7 +114,56 @@ nav button:hover {
   font-size: 1.5rem;
 }
 
-.add-workout-btn {
-  width: 30px;
+.btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn.ghost {
+  background: transparent;
+  border: 1px solid #555;
+  color: #fff;
 }
 
+.home-header {
+  text-align: center;
+}
+.btn.small {
+  padding: 6px;
+}
+
+.workout-form label {
+  display: block;
+  margin-bottom: 12px;
+}
+.workout-form input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #111;
+  color: #fff;
+}
+
+/* workout card earlier */
+.workout-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+.workout-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #222;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.muted {
+  opacity: 0.75;
+  font-size: 0.9rem;
+}

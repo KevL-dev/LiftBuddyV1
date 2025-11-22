@@ -1,24 +1,41 @@
 import { loadHomePage } from "./pages/home.js";
+import { loadNewWorkoutPage } from "./pages/newWorkout.js";
 
 window.addEventListener("load", () => {
   setTimeout(() => {
     document.getElementById("splash").style.display = "none";
     document.getElementById("app").classList.remove("hidden");
     loadPage("home");
-  }, 2500);
+  }, 800);
 });
 
-function loadPage(page) {
+export function loadPage(page) {
   const content = document.getElementById("content");
-
-  if (page === "home") loadHomePage(content);
-  if (page === "newWorkout") content.innerHTML = "<h2>Neues Workout</h2>";
-  if (page === "settings") content.innerHTML = "<h2>Settings</h2>";
-  if (page === "profile") content.innerHTML = "<h2>Profile</h2>";
+  if (page === "home") {
+    loadHomePage(content);
+  } else if (page === "newWorkout") {
+    loadNewWorkoutPage(content);
+  } else {
+    content.innerHTML = `<h2>${page}</h2>`;
+  }
 }
 
 document.querySelectorAll("nav button").forEach((btn) => {
   btn.addEventListener("click", () => {
-    loadPage(btn.dataset.page);
+    const page = btn.dataset.page;
+    window.dispatchEvent(new CustomEvent("navigate", { detail: { page } }));
   });
+});
+
+window.addEventListener("navigate", (e) => {
+  loadPage(e.detail.page);
+});
+
+window.addEventListener("workoutSaved", (e) => {
+  loadPage("home");
+});
+
+window.addEventListener("openWorkout", (e) => {
+  const id = e.detail.id;
+  alert("Open workout: " + id);
 });

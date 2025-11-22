@@ -1,35 +1,59 @@
-const dummyWorkouts = [
-  { name: "Push", created: "2024-06-01" },
-  { name: "Pull", created: "2024-06-03" },
-  { name: "Legs", created: "2024-06-05" },
-];
+import { getWorkouts } from "./data.js";
 
 export function loadHomePage(contentEl) {
-  let html = `<h1>My training plan</h1>`;
+  const workouts = getWorkouts();
 
-  if (dummyWorkouts.length > 0) {
-    html += `<img alt="Plus for adding workouts" src="../assets/plus.svg" class="add-workout-btn"/>`;
+  let html = `<div class="home-header"><h1>My training plan</h1></div>
+              <button id="addNewFromHome" class="btn small"><img alt=add-workout width="24px" height="24px" src="../assets/plus.svg" /></button>
+              `;
+
+  if (workouts.length > 0) {
     html += `<ul class="workout-list">`;
-
-    dummyWorkouts.forEach((workout) => {
+    workouts.forEach((w) => {
       html += `
         <li>
           <div class="workout-card">
-          <img alt=Folder-Icon width="24px" height="24px" src="../assets/folder.svg " />
-            <h3>${workout.name}</h3>
-            <img alt=Dots-Icon width="24px" height="24px" src="../assets/dots.svg " />
+            <div class="workout-left">
+              <h3>${escapeHtml(w.name)}</h3>
+              <p class="muted">Created on: ${w.created}</p>
+            </div>
+            <div class="workout-right">
+              <button class="open-btn" data-id="${w.id}">Open</button>
+            </div>
           </div>
         </li>
       `;
     });
-
     html += `</ul>`;
   } else {
-    html += `
-      <p>No workouts found. Start by creating a new workout!</p>
-      <button>Create New Workout</button>
-    `;
+    html += `<p>No workouts found. Start by creating a new workout!</p>
+             <button id="createFirst" class="btn">Create New Workout</button>`;
   }
 
   contentEl.innerHTML = html;
+
+  const addBtn =
+    document.getElementById("addNewFromHome") ||
+    document.getElementById("createFirst");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      window.dispatchEvent(
+        new CustomEvent("navigate", { detail: { page: "newWorkout" } })
+      );
+    });
+  }
+
+  document.querySelectorAll(".open-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      window.dispatchEvent(new CustomEvent("openWorkout", { detail: { id } }));
+    });
+  });
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
