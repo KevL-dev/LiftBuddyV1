@@ -2,6 +2,7 @@
   --primary-color: linear-gradient(#aeceff 0%, #5884c7 100%);
   --primary-text-color: #1a1a1a;
   --secondary-color: #f5f1e6;
+  --button-color: radial-gradient(circle, rgba(245, 241, 230, 1) 0%, rgba(255, 179, 71, 1) 100%);
 }
 
 * {
@@ -30,9 +31,16 @@ body {
   font-family: "Jolly Lodger", Arial, sans-serif;
   background: var(--primary-color);
   color: var(--primary-text-color);
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   min-height: 100vh;
+}
+
+input {
+  border-style: none;
+  border-radius: 8px;
+  background-color: rgb(255 255 255 / 20%);
+  padding: 12px;
 }
 
 #splash {
@@ -166,3 +174,35 @@ nav button:hover {
   border: none;
   padding: 0;
 }
+
+/* Profile.js */
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-self: center;
+  width: 100%;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-field label {
+  font-size: 28px;
+}
+
+.profile-save-btn {
+  align-self: center;
+}
+
+#saveProfileBtn {
+  background: var(--button-color);
+  color: var(--primary-text-color);
+  font-family: "Jolly Lodger", Arial, sans-serif;
+  font-size: 1.5em;
+  padding: 5px 12px;
+  min-width: 212px;
+}
+
