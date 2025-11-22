@@ -4,7 +4,7 @@ export function loadHomePage(contentEl) {
   const workouts = getWorkouts();
 
   let html = `<div class="home-header"><h1>My training plan</h1></div>
-              <button id="addNewFromHome" class="btn small"><img alt=add-workout width="24px" height="24px" src="../assets/plus.svg" /></button>
+              <button id="addNewFromHome" class="btn btn-add-workout"><img alt="add-workout" width="24px" height="24px" src="../assets/pluswhite.svg" /></button>
               `;
 
   if (workouts.length > 0) {
@@ -18,7 +18,7 @@ export function loadHomePage(contentEl) {
               <p class="muted">Created on: ${w.created}</p>
             </div>
             <div class="workout-right">
-              <button class="open-btn" data-id="${w.id}">Open</button>
+              <button class="btn-open" data-id="${w.id}"><img alt="open-workout" width="24px" height="24px" src="../assets/dots.svg" /></button>
             </div>
           </div>
         </li>
@@ -43,7 +43,7 @@ export function loadHomePage(contentEl) {
     });
   }
 
-  document.querySelectorAll(".open-btn").forEach((btn) => {
+  document.querySelectorAll(".btn-open").forEach((btn) => {
     btn.addEventListener("click", () => {
       const id = btn.dataset.id;
       window.dispatchEvent(new CustomEvent("openWorkout", { detail: { id } }));
@@ -57,3 +57,5 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
+
+

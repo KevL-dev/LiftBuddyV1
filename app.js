@@ -1,5 +1,7 @@
 import { loadHomePage } from "./pages/home.js";
 import { loadNewWorkoutPage } from "./pages/newWorkout.js";
+import { loadSettingsPage } from "./pages/settings.js";
+import { loadProfilePage } from "./pages/profile.js";
 
 window.addEventListener("load", () => {
   setTimeout(() => {
@@ -15,6 +17,10 @@ export function loadPage(page) {
     loadHomePage(content);
   } else if (page === "newWorkout") {
     loadNewWorkoutPage(content);
+  } else if (page === "settings") {
+    loadSettingsPage(content);
+  } else if (page === "profile") {
+    loadProfilePage(content);
   } else {
     content.innerHTML = `<h2>${page}</h2>`;
   }

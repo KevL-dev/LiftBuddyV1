@@ -68,7 +68,6 @@ main#content {
 
 nav {
   display: flex;
-  /* flex-wrap: wrap; */
   justify-content: space-around;
   gap: 10px;
   background: #222;
@@ -86,6 +85,12 @@ nav button {
   border: none;
 }
 
+nav button:hover,
+nav button:focus,
+nav button.active {
+  color: var(--primary-color);
+}
+
 nav button:hover {
   background: #444;
 }
@@ -96,26 +101,13 @@ nav button:hover {
   margin: 0;
 }
 
-.workout-card {
-  background: #222;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  color: white;
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  justify-content: space-between;
-}
-
 .workout-card h3 {
   margin: 0;
   font-size: 1.5rem;
 }
 
 .btn {
-  background: #3b82f6;
+  background: var(--primary-text-color);
   color: white;
   border: none;
   padding: 8px 12px;
@@ -131,8 +123,8 @@ nav button:hover {
 .home-header {
   text-align: center;
 }
-.btn.small {
-  padding: 6px;
+.btn-add-workout {
+  padding: 2px;
 }
 
 .workout-form label {
@@ -148,11 +140,10 @@ nav button:hover {
   color: #fff;
 }
 
-/* workout card earlier */
 .workout-list {
   list-style: none;
   padding: 0;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 .workout-card {
   display: flex;
@@ -162,8 +153,16 @@ nav button:hover {
   background: #222;
   border-radius: 10px;
   margin-bottom: 12px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 .muted {
   opacity: 0.75;
   font-size: 0.9rem;
+}
+
+.btn-open {
+  background: transparent;
+  border: none;
+  padding: 0;
 }
