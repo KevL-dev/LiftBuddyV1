@@ -1,7 +1,12 @@
-import { loadHomePage } from "./pages/home.js";
-import { loadNewWorkoutPage } from "./pages/newWorkout.js";
-import { loadSettingsPage } from "./pages/settings.js";
-import { loadProfilePage } from "./pages/profile.js";
+import { loadHomePage } from "../frontend/pages/home.js";
+import { loadNewWorkoutPage } from "../frontend/pages/newWorkout.js";
+import { loadSettingsPage } from "../frontend/pages/settings.js";
+import { loadProfilePage } from "../frontend/pages/profile.js";
+import { loadRegisterPage } from "../frontend/pages/register.js";
+import { loadMenuPage } from "../frontend/pages/menu.js";
+
+let isMenuOpen = false; // globaler Status für Menü
+
 
 window.addEventListener("load", () => {
   setTimeout(() => {
@@ -21,10 +26,33 @@ export function loadPage(page) {
     loadSettingsPage(content);
   } else if (page === "profile") {
     loadProfilePage(content);
+  } else if (page === "register") {
+    loadRegisterPage(content);
+  } else if (page === "menu") {
+    loadMenuPage(content); 
   } else {
     content.innerHTML = `<h2>${page}</h2>`;
   }
 }
+
+// Delegation: Klicks auf Content abfangen
+document.getElementById("content").addEventListener("click", (e) => {
+  const target = e.target;
+
+  // Prüfen, ob Menüpunkt geklickt wurde
+  if (target.classList.contains("menu-item")) {
+    const page = target.dataset.page;
+
+    // Menü schließen
+    const app = document.getElementById("app");
+    app.classList.remove("shifted");
+    isMenuOpen = false;
+
+    // Seite laden
+    loadPage(page);
+  }
+});
+
 
 document.querySelectorAll("nav button").forEach((btn) => {
   btn.addEventListener("click", () => {
