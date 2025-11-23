@@ -5,6 +5,9 @@ import { loadProfilePage } from "../frontend/pages/profile.js";
 import { loadRegisterPage } from "../frontend/pages/register.js";
 import { loadMenuPage } from "../frontend/pages/menu.js";
 
+let isMenuOpen = false; // globaler Status für Menü
+
+
 window.addEventListener("load", () => {
   setTimeout(() => {
     document.getElementById("splash").style.display = "none";
@@ -32,6 +35,23 @@ export function loadPage(page) {
   }
 }
 
+// Delegation: Klicks auf Content abfangen
+document.getElementById("content").addEventListener("click", (e) => {
+  const target = e.target;
+
+  // Prüfen, ob Menüpunkt geklickt wurde
+  if (target.classList.contains("menu-item")) {
+    const page = target.dataset.page;
+
+    // Menü schließen
+    const app = document.getElementById("app");
+    app.classList.remove("shifted");
+    isMenuOpen = false;
+
+    // Seite laden
+    loadPage(page);
+  }
+});
 
 
 document.querySelectorAll("nav button").forEach((btn) => {
