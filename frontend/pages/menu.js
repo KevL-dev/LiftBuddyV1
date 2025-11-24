@@ -19,6 +19,8 @@ export function loadMenuPage(content) {
       <div class="menu-item" data-page="home">Home</div>
       <div class="menu-item" data-page="profile">Profile</div>
       <div class="menu-item" data-page="settings">Settings</div>
+      <div class="menu-item" data-page="register">register</div>
+      <div class="menu-item" data-page="login">login</div>
     </div>
   `;
   content.insertAdjacentHTML("beforeend", html);

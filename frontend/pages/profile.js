@@ -12,8 +12,8 @@ export function loadProfilePage(content) {
                     <input type="email" id="profileEmail" name="email" />
                 </div>
 
-                <div class="profile-save-btn">
-                    <button class="btn" id="saveProfileBtn">Save Profile</button>
+                <div class="middle-pos-btn">
+                    <button class="btn buddy-btn" id="saveProfileBtn">Save Profile</button>
                 </div>
                 </div>
                 
