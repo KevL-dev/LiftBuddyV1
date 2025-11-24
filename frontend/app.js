@@ -4,9 +4,9 @@ import { loadSettingsPage } from "../frontend/pages/settings.js";
 import { loadProfilePage } from "../frontend/pages/profile.js";
 import { loadRegisterPage } from "../frontend/pages/register.js";
 import { loadMenuPage } from "../frontend/pages/menu.js";
+import { loadLoginPage } from "./pages/login.js";
 
-let isMenuOpen = false; // globaler Status für Menü
-
+let isMenuOpen = false;
 
 window.addEventListener("load", () => {
   setTimeout(() => {
@@ -28,31 +28,28 @@ export function loadPage(page) {
     loadProfilePage(content);
   } else if (page === "register") {
     loadRegisterPage(content);
+  } else if (page === "login") {
+    loadLoginPage(content);
   } else if (page === "menu") {
-    loadMenuPage(content); 
+    loadMenuPage(content);
   } else {
     content.innerHTML = `<h2>${page}</h2>`;
   }
 }
 
-// Delegation: Klicks auf Content abfangen
 document.getElementById("content").addEventListener("click", (e) => {
   const target = e.target;
 
-  // Prüfen, ob Menüpunkt geklickt wurde
   if (target.classList.contains("menu-item")) {
     const page = target.dataset.page;
 
-    // Menü schließen
     const app = document.getElementById("app");
     app.classList.remove("shifted");
     isMenuOpen = false;
 
-    // Seite laden
     loadPage(page);
   }
 });
-
 
 document.querySelectorAll("nav button").forEach((btn) => {
   btn.addEventListener("click", () => {
