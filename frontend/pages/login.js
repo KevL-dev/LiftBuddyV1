@@ -37,7 +37,7 @@ export function loadLoginPage(content) {
     const password = passwordInput.value;
 
     if (!email || !password) {
-      msg.textContent = "Bitte alle Felder ausfüllen.";
+      msg.textContent = "Please fill in all fields.";
       msg.style.color = "red";
       return;
     }
@@ -57,7 +57,7 @@ export function loadLoginPage(content) {
       return;
     }
 
-    msg.textContent = "Login erfolgreich!";
+    msg.textContent = "Login successfully!";
     msg.style.color = "green";
 
   }

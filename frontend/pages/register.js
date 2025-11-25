@@ -52,13 +52,13 @@ export function loadRegisterPage(content) {
     const confirmPassword = confirmPasswordInput.value;
 
     if (!email || !username || !password || !confirmPassword) {
-      msg.textContent = "Bitte fülle alle Felder aus.";
+      msg.textContent = "Please fill in all fields.";
       msg.style.color = "red";
       return;
     }
 
     if (password !== confirmPassword) {
-      msg.textContent = "Passwörter stimmen nicht überein.";
+      msg.textContent = "Passwords do not match.";
       msg.style.color = "red";
       return;
     }
@@ -78,7 +78,7 @@ export function loadRegisterPage(content) {
       return;
     }
 
-    msg.textContent = "Registrierung erfolgreich!";
+    msg.textContent = "Registrierung successfully!";
     msg.style.color = "green";
   }
 }
