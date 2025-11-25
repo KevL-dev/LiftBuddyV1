@@ -265,3 +265,11 @@ nav button:hover {
 .menu-item:hover {
   background: #555;
 }
+
+#loginMessage {
+  font-size: 22px;
+}
+
+#registerMessage {
+  font-size: 22px;
+}

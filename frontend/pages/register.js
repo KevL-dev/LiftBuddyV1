@@ -1,15 +1,84 @@
 export function loadRegisterPage(content) {
-    let html = `<div><h1>LiftBuddy</h1>
-                </div>
+  let html = `
+    <div><h1>LiftBuddy</h1></div>
                 
-                <div class="register-form"> 
-                    <div>
-                      <label for="username">Username:</label>
-                      <input type="text" id="username" name="username" required />
-                    </div>
-                    
-                
-                </div>`;
+    <div class="register-form"> 
+      <div class="profile-content">
+        <div class="profile-field">
+          <label for="name">Name:</label>
+          <input type="text" id="registerName" name="name" />
+        </div>
 
-    content.innerHTML = html;
-}               
+        <div class="profile-field">
+          <label for="email">Email:</label>
+          <input type="email" id="registerEmail" name="email" />
+        </div>
+
+        <div class="profile-field">
+          <label for="password">Password:</label>
+          <input type="password" id="registerPassword" name="registerPassword" />
+        </div>
+
+        <div class="profile-field">
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" />
+        </div>
+
+        <div class="middle-pos-btn">
+          <button class="btn buddy-btn" id="registerBtn">Register</button>
+        </div>
+
+        <p id="registerMessage"></p>
+      </div>
+    </div>
+  `;
+
+  content.innerHTML = html;
+
+  const emailInput = document.querySelector("#registerEmail");
+  const usernameInput = document.querySelector("#registerName");
+  const passwordInput = document.querySelector("#registerPassword");
+  const confirmPasswordInput = document.querySelector("#confirmPassword");
+  const msg = document.querySelector("#registerMessage");
+
+  document
+    .querySelector("#registerBtn")
+    .addEventListener("click", registerUser);
+
+  async function registerUser() {
+    const email = emailInput.value.trim();
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+
+    if (!email || !username || !password || !confirmPassword) {
+      msg.textContent = "Please fill in all fields.";
+      msg.style.color = "red";
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      msg.textContent = "Passwords do not match.";
+      msg.style.color = "red";
+      return;
+    }
+
+    const res = await fetch("http://localhost:3000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email, username, password }),
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      msg.textContent = data.error;
+      msg.style.color = "red";
+      return;
+    }
+
+    msg.textContent = "Registrierung successfully!";
+    msg.style.color = "green";
+  }
+}
