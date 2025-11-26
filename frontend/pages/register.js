@@ -1,3 +1,5 @@
+import { loadLoginPage } from "./login.js";
+
 export function loadRegisterPage(content) {
   let html = `
     <div><h1>LiftBuddy</h1></div>
@@ -28,7 +30,13 @@ export function loadRegisterPage(content) {
           <button class="btn buddy-btn" id="registerBtn">Register</button>
         </div>
 
-        <p id="registerMessage"></p>
+        <p>Already have an account?
+          <span id="goLogin" class="link">Login</span>
+        </p>
+
+        <div id="errorBox"></div>
+        <div id="registerMessage"></div>
+
       </div>
     </div>
   `;
@@ -78,7 +86,11 @@ export function loadRegisterPage(content) {
       return;
     }
 
-    msg.textContent = "Registrierung successfully!";
+    msg.textContent = "Registration successful!";
     msg.style.color = "green";
   }
+
+  document.querySelector("#goLogin").addEventListener("click", () => {
+    loadLoginPage(content);
+  });
 }
