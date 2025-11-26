@@ -25,6 +25,14 @@ router.post("/register", async (req, res) => {
   res.json({ message: "Registered successfully", user: newUser });
 });
 
+router.get("/me", (req, res) => {
+  if (req.session.userId) {
+    return res.json({ loggedIn: true, userId: req.session.userId });
+  }
+  res.json({ loggedIn: false });
+});
+
+
 // -------------------------------------
 //             LOGIN
 // -------------------------------------

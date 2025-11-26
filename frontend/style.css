@@ -266,10 +266,7 @@ nav button:hover {
   background: #555;
 }
 
-#loginMessage {
+#errorBox {
   font-size: 22px;
-}
-
-#registerMessage {
-  font-size: 22px;
+  color: red;
 }

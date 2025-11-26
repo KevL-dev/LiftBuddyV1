@@ -16,6 +16,23 @@ window.addEventListener("load", () => {
   }, 800);
 });
 
+async function checkAuth() {
+  const res = await fetch("http://localhost:3000/api/auth/me", {
+    credentials: "include"
+  });
+  
+  const data = await res.json();
+
+  if (data.loggedIn) {
+    loadHomePage(content);
+  } else {
+    loadLoginPage(content);
+  }
+}
+
+checkAuth();
+
+
 export function loadPage(page) {
   const content = document.getElementById("content");
   if (page === "home") {
