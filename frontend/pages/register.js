@@ -30,8 +30,8 @@ export function loadRegisterPage(content) {
           <button class="btn buddy-btn" id="registerBtn">Register</button>
         </div>
 
-        <p>Already have an account?
-          <span id="goLogin" class="link">Login</span>
+        <p class="change-site">Already have an account?
+          <span id="goLogin" class="">Login</span>
         </p>
 
         <div id="errorBox"></div>
@@ -88,6 +88,9 @@ export function loadRegisterPage(content) {
 
     msg.textContent = "Registration successful!";
     msg.style.color = "green";
+
+    loadLoginPage(document.getElementById("content"));
+
   }
 
   document.querySelector("#goLogin").addEventListener("click", () => {

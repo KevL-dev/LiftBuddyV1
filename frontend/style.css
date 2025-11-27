@@ -270,3 +270,11 @@ nav button:hover {
   font-size: 22px;
   color: red;
 }
+
+.change-site {
+  font-size: 22px;
+}
+
+.change-site span {
+  color: rgba(255, 179, 71, 1);
+}
