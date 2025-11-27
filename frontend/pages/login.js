@@ -1,4 +1,5 @@
 import { loadRegisterPage } from "./register.js";
+import { loadHomePage } from "./home.js";
 
 export function loadLoginPage(content) {
   let html = `
@@ -21,7 +22,7 @@ export function loadLoginPage(content) {
           <button class="btn buddy-btn" id="loginBtn">Login</button>
         </div>
 
-        <p>Don't have an account yet? 
+        <p class="change-site">Don't have an account yet? 
           <span id="goRegister" class="link">Register</span>
         </p>
 
@@ -65,6 +66,9 @@ export function loadLoginPage(content) {
 
     msg.textContent = "Login successfully!";
     msg.style.color = "green";
+
+    loadHomePage(document.getElementById("content"));
+
   }
 
   document.querySelector("#goRegister").addEventListener("click", () => {
