@@ -8,27 +8,36 @@ import { loadLoginPage } from "./pages/login.js";
 
 let isMenuOpen = false;
 
-window.addEventListener("load", () => {
-  setTimeout(() => {
+window.addEventListener("load", async () => {
+  setTimeout(async () => {
     document.getElementById("splash").style.display = "none";
     document.getElementById("app").classList.remove("hidden");
-    loadPage("home");
+
+    const content = document.getElementById("content");
+    const auth = await checkAuth();
+
+    if (auth.loggedIn) {
+      loadHomePage(content);
+    } else {
+      loadLoginPage(content);
+    }
   }, 800);
 });
 
-async function checkAuth() {
-  const res = await fetch("http://localhost:3000/api/auth/me", {
-    credentials: "include"
-  });
-  
-  const data = await res.json();
 
-  if (data.loggedIn) {
-    loadHomePage(content);
-  } else {
-    loadLoginPage(content);
+export async function checkAuth() {
+  try {
+    const res = await fetch("http://localhost:3000/api/auth/me", {
+      credentials: "include"
+    });
+
+    return await res.json();
+  } catch (err) {
+    console.error("Auth check failed:", err);
+    return { loggedIn: false };
   }
 }
+
 
 checkAuth();
 

@@ -29,7 +29,7 @@ app.use(
     secret: "supersecretkey",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    cookie: { httpOnly: true },
   })
 );
 
