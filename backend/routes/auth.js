@@ -25,14 +25,6 @@ router.post("/register", async (req, res) => {
   res.json({ message: "Registered successfully", user: newUser });
 });
 
-router.get("/me", (req, res) => {
-  if (req.session.userId) {
-    return res.json({ loggedIn: true, userId: req.session.userId });
-  }
-  res.json({ loggedIn: false });
-});
-
-
 // -------------------------------------
 //             LOGIN
 // -------------------------------------
@@ -53,22 +45,32 @@ router.post("/login", async (req, res) => {
 });
 
 // -------------------------------------
-//          CHECK SESSION
-// -------------------------------------
-router.get("/me", (req, res) => {
-  if (!req.session.userId)
-    return res.json({ loggedIn: false });
-
-  res.json({ loggedIn: true, userId: req.session.userId });
-});
-
-// -------------------------------------
 //            LOGOUT
 // -------------------------------------
 router.post("/logout", (req, res) => {
   req.session.destroy(() => {
-    res.json({ message: "Logged out" });
+    res.json({ success: true });
+  });
+});
+
+// -------------------------------------
+//          CHECK SESSION
+// -------------------------------------
+
+router.get("/me", (req, res) => {
+  if (!req.session.userId) {
+    return res.json({ loggedIn: false });
+  }
+
+  res.json({
+    loggedIn: true,
+    user: {
+      id: req.session.userId,
+      email: req.session.email,
+      username: req.session.username,
+    },
   });
 });
 
 module.exports = router;
+

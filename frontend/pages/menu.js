@@ -1,3 +1,5 @@
+import { loadLoginPage } from "./login.js";
+
 let isMenuOpen = false;
 
 export function toggleMenu() {
@@ -21,9 +23,22 @@ export function loadMenuPage(content) {
       <div class="menu-item" data-page="settings">Settings</div>
       <div class="menu-item" data-page="register">register</div>
       <div class="menu-item" data-page="login">login</div>
+      <button id="logoutBtn" class="menu-item">Logout</button>
+
     </div>
   `;
+
+   
   content.insertAdjacentHTML("beforeend", html);
+
+  document.querySelector("#logoutBtn").addEventListener("click", async () => {
+    await fetch("http://localhost:3000/api/auth/logout", {
+      method: "POST",
+      credentials: "include"
+    });
+
+    loadLoginPage(content);
+  });
 }
 
 document.querySelectorAll("nav button").forEach((btn) => {
@@ -54,3 +69,5 @@ document.addEventListener("click", (e) => {
     console.log("Navigate to ", page);
   }
 });
+
+

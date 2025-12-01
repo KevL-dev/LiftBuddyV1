@@ -2,9 +2,9 @@ const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
-
 const app = express();
-
+var cookieParser = require("cookie-parser");
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -29,7 +29,7 @@ app.use(
     secret: "supersecretkey",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    cookie: { httpOnly: true },
   })
 );
 
