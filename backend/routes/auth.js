@@ -53,8 +53,6 @@ router.post("/logout", (req, res) => {
   });
 });
 
-module.exports = router;
-
 // -------------------------------------
 //          CHECK SESSION
 // -------------------------------------
@@ -73,3 +71,6 @@ router.get("/me", (req, res) => {
     },
   });
 });
+
+module.exports = router;
+
