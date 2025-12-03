@@ -28,13 +28,12 @@ export function loadMenuPage(content) {
     </div>
   `;
 
-   
   content.insertAdjacentHTML("beforeend", html);
 
   document.querySelector("#logoutBtn").addEventListener("click", async () => {
     await fetch("http://localhost:3000/api/auth/logout", {
       method: "POST",
-      credentials: "include"
+      credentials: "include",
     });
 
     loadLoginPage(content);
@@ -69,5 +68,3 @@ document.addEventListener("click", (e) => {
     console.log("Navigate to ", page);
   }
 });
-
-

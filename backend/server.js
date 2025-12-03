@@ -1,46 +1,18 @@
 const express = require("express");
-const session = require("express-session");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
-const app = express();
-var cookieParser = require("cookie-parser");
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Middleware -------------------------
-const allowedOrigins = ["http://localhost:5500", "http://127.0.0.1:5500"];
+const app = express();
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: "http://127.0.0.1:5500",
     credentials: true,
   })
 );
 
-app.use(
-  session({
-    secret: "supersecretkey",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { httpOnly: true },
-  })
-);
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Backend läuft!");
-});
-
-// Routes -----------------------------
 app.use("/api/auth", authRoutes);
 
-// Start Server -----------------------
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
+app.listen(3000, () => console.log("Server läuft auf Port 3000"));

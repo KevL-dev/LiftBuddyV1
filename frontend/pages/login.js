@@ -37,38 +37,24 @@ export function loadLoginPage(content) {
   const passwordInput = document.querySelector("#loginPassword");
   const msg = document.querySelector("#loginMessage");
 
-  document.querySelector("#loginBtn").addEventListener("click", loginUser);
+  document.querySelector("#loginBtn").addEventListener("click", login);
 
-  async function loginUser() {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-
-    if (!email || !password) {
-      msg.textContent = "Please fill in all fields.";
-      msg.style.color = "red";
-      return;
-    }
+  async function login() {
+    const email = document.querySelector("#loginEmail").value;
+    const password = document.querySelector("#loginPassword").value;
 
     const res = await fetch("http://localhost:3000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 
     const data = await res.json();
 
-    if (data.error) {
-      msg.textContent = data.error;
-      msg.style.color = "red";
-      return;
+    if (data.success) {
+      localStorage.setItem("authToken", data.token);
+      alert("Login erfolgreich!");
     }
-
-    msg.textContent = "Login successfully!";
-    msg.style.color = "green";
-
-    loadHomePage(document.getElementById("content"));
-
   }
 
   document.querySelector("#goRegister").addEventListener("click", () => {
