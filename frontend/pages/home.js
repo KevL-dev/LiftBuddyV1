@@ -1,10 +1,15 @@
 import { getWorkouts } from "./data.js";
 
-export function loadHomePage(contentEl) {
+export async function loadHomePage(contentEl) {
   const workouts = getWorkouts();
 
-  let html = `<div class="home-header"><h1>My training plan</h1></div>
-              <button id="addNewFromHome" class="btn btn-add-workout"><img alt="add-workout" width="24px" height="24px" src="../frontend/assets/pluswhite.svg" /></button>
+  let html = `<div class="home-header">
+                <h1>My training plan</h1>
+                <p id="welcome"></p>
+              </div>
+              <button id="addNewFromHome" class="btn btn-add-workout">
+                <img alt="add-workout" width="24px" height="24px" src="../frontend/assets/pluswhite.svg" />
+              </button>
               `;
 
   if (workouts.length > 0) {
@@ -18,7 +23,9 @@ export function loadHomePage(contentEl) {
               <p class="muted">Created on: ${w.created}</p>
             </div>
             <div class="workout-right">
-              <button class="btn-open" data-id="${w.id}"><img alt="open-workout" width="24px" height="24px" src="../frontend/assets/dots.svg" /></button>
+              <button class="btn-open" data-id="${w.id}">
+                <img alt="open-workout" width="24px" height="24px" src="../frontend/assets/dots.svg" />
+              </button>
             </div>
           </div>
         </li>
@@ -57,5 +64,3 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
-
-

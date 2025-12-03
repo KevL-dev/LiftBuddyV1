@@ -1,76 +1,129 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const Users = require("../models/users");
-
 const router = express.Router();
+const crypto = require("crypto");
+const db = require("../database.js")
+
+function generateToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
 
 // -------------------------------------
 //           REGISTER
 // -------------------------------------
-router.post("/register", async (req, res) => {
-  const { email, username,  password } = req.body;
+router.post("/register", (req, res) => {
+  const { username, email, password } = req.body;
 
-  if (!email || !password || !username)
-    return res.status(400).json({ error: "Email, Username and Password required" });
+  bcrypt.hash(password, 10, (err, hash) => {
+    if (err) return res.status(500).json({ error: "Hash error" });
 
-  const existing = await Users.findByEmail(email);
-  if (existing)
-    return res.status(400).json({ error: "Email already in use" });
+    const created = new Date().toISOString();
 
-  const hash = bcrypt.hashSync(password, 10);
-  const newUser = await Users.createUser(email, username, hash);
+    db.run(
+      `INSERT INTO users (username, email, passwordHash, created)
+       VALUES (?, ?, ?, ?)`,
+      [username, email, hash, created],
+      function (err) {
+        if (err) return res.status(400).json({ error: "Email exists already" });
 
-  req.session.userId = newUser.id;
-
-  res.json({ message: "Registered successfully", user: newUser });
+        return res.json({ success: true });
+      }
+    );
+  });
 });
 
 // -------------------------------------
 //             LOGIN
 // -------------------------------------
-router.post("/login", async (req, res) => {
+router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  const user = await Users.findByEmail(email);
-  if (!user)
-    return res.status(400).json({ error: "Invalid credentials" });
+  db.get(
+    `SELECT * FROM users WHERE email = ?`,
+    [email],
+    async (err, user) => {
+      if (err || !user) return res.status(400).json({ error: "Invalid credentials" });
 
-  const match = bcrypt.compareSync(password, user.passwordHash);
-  if (!match)
-    return res.status(400).json({ error: "Invalid credentials" });
+      const valid = await bcrypt.compare(password, user.passwordHash);
+      if (!valid) return res.status(400).json({ error: "Invalid credentials" });
 
-  req.session.userId = user.id;
+      const token = generateToken();
 
-  res.json({ message: "Logged in", user: { id: user.id, email: user.email } });
+      db.run(
+        `UPDATE users SET authToken = ? WHERE id = ?`,
+        [token, user.id],
+        () => {
+          res.json({
+            success: true,
+            token,
+            user: {
+              id: user.id,
+              username: user.username,
+              email: user.email
+            }
+          });
+        }
+      );
+    }
+  );
+});
+
+// --------------------------
+// TOKEN LOGIN (Auto-Login)
+// --------------------------
+router.post("/token-login", (req, res) => {
+  const { token } = req.body;
+
+  if (!token) return res.json({ loggedIn: false });
+
+  db.get(
+    `SELECT id, username, email FROM users WHERE authToken = ?`,
+    [token],
+    (err, user) => {
+      if (err || !user) 
+        return res.json({ loggedIn: false });
+
+      res.json({
+        loggedIn: true,
+        user
+      });
+    }
+  );
 });
 
 // -------------------------------------
 //            LOGOUT
 // -------------------------------------
 router.post("/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.json({ success: true });
-  });
+  const { token } = req.body;
+
+  db.run(
+    `UPDATE users SET authToken = NULL WHERE authToken = ?`,
+    [token],
+    () => res.json({ success: true })
+  );
 });
 
 // -------------------------------------
 //          CHECK SESSION
 // -------------------------------------
 
-router.get("/me", (req, res) => {
-  if (!req.session.userId) {
-    return res.json({ loggedIn: false });
-  }
+// router.get("/me", (req, res) => {
+//   console.log(req.session);
+//   if (!req.session.userId) {
+//     return res.json({ loggedIn: false });
+//   }
 
-  res.json({
-    loggedIn: true,
-    user: {
-      id: req.session.userId,
-      email: req.session.email,
-      username: req.session.username,
-    },
-  });
-});
+//   res.json({
+//     loggedIn: true,
+//     user: {
+//       id: req.session.userId,
+//       email: req.session.email,
+//       username: req.session.username,
+//     },
+//   });
+// });
 
 module.exports = router;
 

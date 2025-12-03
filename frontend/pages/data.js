@@ -1,24 +1,24 @@
 const STORAGE_KEY = "liftbuddy_workouts";
 
 function loadFromStorage() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return [];
-        return JSON.parse(raw);
-    } catch (e) {
-        console.error("Error loading workouts from storage:", e);
-        return [];
-    }
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error("Error loading workouts from storage:", e);
+    return [];
+  }
 }
 
 function saveToStorage(workouts) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
 }
 
 let workouts = loadFromStorage();
 
 export function getWorkouts() {
-    return [...workouts];
+  return [...workouts];
 }
 
 export function addWorkout(workout) {

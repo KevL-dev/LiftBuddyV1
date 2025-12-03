@@ -24,11 +24,15 @@ window.addEventListener("load", async () => {
   }, 800);
 });
 
-
 export async function checkAuth() {
+  const token = localStorage.getItem("authToken");
+  if (!token) return { loggedIn: false };
+
   try {
-    const res = await fetch("http://localhost:3000/api/auth/me", {
-      credentials: "include"
+    const res = await fetch("http://localhost:3000/api/auth/token-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
     });
 
     return await res.json();
@@ -37,10 +41,6 @@ export async function checkAuth() {
     return { loggedIn: false };
   }
 }
-
-
-checkAuth();
-
 
 export function loadPage(page) {
   const content = document.getElementById("content");
