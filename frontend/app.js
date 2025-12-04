@@ -6,6 +6,26 @@ import { loadRegisterPage } from "../frontend/pages/register.js";
 import { loadMenuPage } from "../frontend/pages/menu.js";
 import { loadLoginPage } from "./pages/login.js";
 
+export function updateMenu(auth) {
+  const loginBtn = document.querySelector("[data-page='login']");
+  const registerBtn = document.querySelector("[data-page='register']");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (!loginBtn || !registerBtn || !logoutBtn) {
+    return;
+  }
+
+  if (auth.loggedIn) {
+    loginBtn.style.display = "none";
+    registerBtn.style.display = "none";
+    logoutBtn.style.display = "block";
+  } else {
+    loginBtn.style.display = "block";
+    registerBtn.style.display = "block";
+    logoutBtn.style.display = "none";
+  }
+}
+
 let isMenuOpen = false;
 
 window.addEventListener("load", async () => {
@@ -16,8 +36,10 @@ window.addEventListener("load", async () => {
     const content = document.getElementById("content");
     const auth = await checkAuth();
 
+    updateMenu(auth);
+
     if (auth.loggedIn) {
-      loadHomePage(content);
+      loadHomePage(content, auth.user);
     } else {
       loadLoginPage(content);
     }

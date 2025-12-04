@@ -1,4 +1,5 @@
 import { loadLoginPage } from "./login.js";
+import { checkAuth, updateMenu } from "../app.js";
 
 let isMenuOpen = false;
 
@@ -31,13 +32,16 @@ export function loadMenuPage(content) {
   content.insertAdjacentHTML("beforeend", html);
 
   document.querySelector("#logoutBtn").addEventListener("click", async () => {
+    localStorage.removeItem("authToken");
     await fetch("http://localhost:3000/api/auth/logout", {
       method: "POST",
       credentials: "include",
     });
-
-    loadLoginPage(content);
+    window.dispatchEvent(
+      new CustomEvent("navigate", { detail: { page: "login" } })
+    );
   });
+  checkAuth().then((auth) => updateMenu(auth));
 }
 
 document.querySelectorAll("nav button").forEach((btn) => {
