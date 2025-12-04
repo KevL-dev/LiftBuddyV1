@@ -1,6 +1,23 @@
 import { getWorkouts } from "./data.js";
+import { checkAuth } from "../app.js";
 
-export async function loadHomePage(contentEl) {
+export async function loadHomePage(contentEl, user) {
+  if (!user) {
+    const auth = await checkAuth();
+    user = auth.user;
+  }
+
+  const auth = await checkAuth();
+
+  if (auth.loggedIn) {
+    const welcomeEl = document.getElementById("welcome");
+    if (welcomeEl) {
+      welcomeEl.textContent = `Hey, ${auth.user.username}!`;
+    }
+  } else {
+    console.log("Something went wrong -> Welcome Text.");
+  }
+
   const workouts = getWorkouts();
 
   let html = `<div class="home-header">
