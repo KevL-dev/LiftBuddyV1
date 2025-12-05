@@ -18,7 +18,7 @@ export function toggleMenu() {
 export function loadMenuPage(content) {
   let html = `
     <div id="menu-slider">
-      <h2>Menu</h2>
+      <h2 class="menu-title">Menu</h2>
       <div class="menu-item" data-page="home">Home</div>
       <div class="menu-item" data-page="profile">Profile</div>
       <div class="menu-item" data-page="settings">Settings</div>
