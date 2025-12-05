@@ -1,6 +1,7 @@
 import { loadRegisterPage } from "./register.js";
 import { loadHomePage } from "./home.js";
 import { loadPage } from "../app.js";
+import { updateMenu } from "../app.js";
 
 export function loadLoginPage(content) {
   let html = `
@@ -9,7 +10,6 @@ export function loadLoginPage(content) {
     <div class="login-form"> 
       <div class="profile-content">
 
-        <div class="profile-field">
           <label for="email">Email:</label>
           <input type="email" id="loginEmail" name="email" />
         </div>
@@ -54,7 +54,9 @@ export function loadLoginPage(content) {
 
     if (data.success) {
       localStorage.setItem("authToken", data.token);
+      localStorage.setItem("username", data.user.username);
       updateMenu({ loggedIn: true });
+      updateWelcome();
       loadPage("home");
     } else {
       console.log("Something went wrong: " + data.error);
