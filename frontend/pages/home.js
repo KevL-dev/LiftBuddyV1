@@ -1,10 +1,13 @@
 import { getWorkouts } from "./data.js";
 import { checkAuth } from "../app.js";
 
-export async function loadHomePage(contentEl, user) {
+export async function loadHomePage(contentEl, user = null) {
   if (!user) {
     const auth = await checkAuth();
-    user = auth.user;
+    if (auth && auth.loggedIn) {
+      user = auth.user;
+      if (user.username) localStorage.setItem("username", user.username);
+    }
   }
 
   const auth = await checkAuth();
@@ -19,6 +22,7 @@ export async function loadHomePage(contentEl, user) {
   }
 
   const workouts = getWorkouts();
+  const username = user?.username ?? localStorage.getItem("username") ?? null;
 
   let html = `<div class="home-header">
                 <h1>My training plan</h1>
@@ -55,6 +59,15 @@ export async function loadHomePage(contentEl, user) {
   }
 
   contentEl.innerHTML = html;
+
+  const welcomeEl = document.getElementById("welcome");
+  if (welcomeEl) {
+    if (username) {
+      welcomeEl.textContent = `Hey, ${username}!`;
+    } else {
+      welcomeEl.textContent = `Welcome!`;
+    }
+  }
 
   const addBtn =
     document.getElementById("addNewFromHome") ||
