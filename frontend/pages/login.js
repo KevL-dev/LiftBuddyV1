@@ -19,13 +19,13 @@ export function loadLoginPage(content) {
           <input type="password" id="loginPassword" name="password" />
         </div>
 
-        <div class="middle-pos-btn">
-          <button class="btn buddy-btn" id="loginBtn">Login</button>
-        </div>
-
         <p class="change-site">Don't have an account yet? 
           <span id="goRegister" class="link">Register</span>
         </p>
+
+        <div class="middle-pos-btn">
+          <button class="btn buddy-btn" id="loginBtn">Login</button>
+        </div>
 
         <p id="loginMessage"></p>
       </div>
