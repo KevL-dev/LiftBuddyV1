@@ -82,8 +82,25 @@ router.post("/token-login", (req, res) => {
 router.post("/logout", (req, res) => {
   const { token } = req.body;
 
-  db.run(`UPDATE users SET authToken = NULL WHERE authToken = ?`, [token], () =>
-    res.json({ success: true })
+  if (!token) {
+    return res.status(400).json({ error: "No token provided" });
+  }
+
+  db.run(
+    `UPDATE users SET authToken = NULL WHERE authToken = ?`,
+    [token],
+    function (err) {
+      if (err) {
+        console.error("DB error on logout:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      if (this.changes === 0) {
+        return res.status(400).json({ error: "Invalid token" });
+      }
+
+      res.json({ success: true });
+    }
   );
 });
 

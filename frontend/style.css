@@ -182,15 +182,19 @@ nav button:hover {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-bottom: 80px;
 }
 
 .profile-field {
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
 .profile-field label {
+  font-size: 28px;
+}
+
+.profile-content label {
   font-size: 28px;
 }
 
@@ -296,4 +300,14 @@ nav button:hover {
 
 .change-site span {
   color: rgba(255, 179, 71, 1);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hide {
+  display: none;
 }
