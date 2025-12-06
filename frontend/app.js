@@ -6,6 +6,21 @@ import { loadRegisterPage } from "../frontend/pages/register.js";
 import { loadMenuPage } from "../frontend/pages/menu.js";
 import { loadLoginPage } from "./pages/login.js";
 
+function checkLoginStatus() {
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    document.getElementById("navbar").classList.add("hide");
+    console.log("No auth token found.");
+    return { loggedIn: false };
+  } else if (token) {
+    document.getElementById("navbar").classList.remove("hide");
+    console.log("Auth token found.");
+    return { loggedIn: true };
+  }
+}
+checkLoginStatus();
+
 export function updateMenu(auth) {
   const loginBtn = document.querySelector("[data-page='login']");
   const registerBtn = document.querySelector("[data-page='register']");
