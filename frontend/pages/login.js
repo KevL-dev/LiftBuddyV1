@@ -55,6 +55,7 @@ export function loadLoginPage(content) {
     if (data.success) {
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("username", data.user.username);
+      localStorage.setItem("profileEmail", data.user.email);
       updateMenu({ loggedIn: true });
       updateWelcome();
       loadPage("home");

@@ -20,4 +20,16 @@ export function loadProfilePage(content) {
     `;
 
   content.innerHTML = html;
+
+  const profileNameInput = document.getElementById("profileName");
+  const profileEmailInput = document.getElementById("profileEmail");
+
+  loadProfile(profileNameInput, profileEmailInput);
+}
+
+function loadProfile(nameInput, emailInput) {
+    const savedName = localStorage.getItem("username") || "";
+    const savedEmail = localStorage.getItem("profileEmail") || "";
+    nameInput.value = savedName;
+    emailInput.value = savedEmail;
 }
