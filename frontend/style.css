@@ -311,3 +311,7 @@ nav button:hover {
 .hide {
   display: none;
 }
+
+#welcome {
+  font-size: 22px;
+}
