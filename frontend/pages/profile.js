@@ -28,8 +28,8 @@ export function loadProfilePage(content) {
 }
 
 function loadProfile(nameInput, emailInput) {
-    const savedName = localStorage.getItem("username") || "";
-    const savedEmail = localStorage.getItem("profileEmail") || "";
-    nameInput.value = savedName;
-    emailInput.value = savedEmail;
+  const savedName = localStorage.getItem("username") || "";
+  const savedEmail = localStorage.getItem("profileEmail") || "";
+  nameInput.value = savedName;
+  emailInput.value = savedEmail;
 }

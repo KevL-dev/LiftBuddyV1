@@ -12,6 +12,66 @@ db.serialize(() => {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS exercises (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      muscle_group TEXT
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS workouts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      name TEXT NOT NULL,
+      created TEXT,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS workout_exercises (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      workout_id INTEGER NOT NULL,
+      exercise_id INTEGER NOT NULL,
+      sets INTEGER,
+      reps INTEGER,
+      weight REAL,
+      FOREIGN KEY (workout_id) REFERENCES workouts(id),
+      FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+    )
+  `);
+
+  db.get("SELECT COUNT(*) as c FROM exercises", (err, row) => {
+    if (err) {
+      console.error("Error counting exercises:", err);
+      return;
+    }
+    if (row && row.c === 0) {
+      console.log("Seeding default exercises...");
+      const defaults = [
+        ["Bench Press", "Chest"],
+        ["Incline Dumbbell Press", "Chest"],
+        ["Squat", "Legs"],
+        ["Deadlift", "Back"],
+        ["Pull Up", "Back"],
+        ["Barbell Row", "Back"],
+        ["Shoulder Press", "Shoulders"],
+        ["Biceps Curl", "Arms"],
+        ["Triceps Dip", "Arms"],
+        ["Leg Press", "Legs"],
+      ];
+      const stmt = db.prepare(
+        "INSERT INTO exercises (name, muscle_group) VALUES (?, ?)"
+      );
+      defaults.forEach((d) => stmt.run(d[0], d[1]));
+      stmt.finalize();
+    } else {
+      console.log("Exercises already seeded.");
+    }
+  });
+
   db.get(`PRAGMA table_info(users);`, (err, row) => {
     db.all(`PRAGMA table_info(users);`, (err, columns) => {
       const hasToken = columns.some((col) => col.name === "authToken");
