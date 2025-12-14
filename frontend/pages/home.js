@@ -1,77 +1,75 @@
-import { getWorkouts } from "./data.js";
 import { checkAuth } from "../app.js";
 
-export async function loadHomePage(contentEl, user = null) {
-  if (!user) {
-    const auth = await checkAuth();
-    if (auth && auth.loggedIn) {
-      user = auth.user;
-      if (user.username) localStorage.setItem("username", user.username);
-    }
-  }
+const API_BASE = "http://localhost:3000/api";
 
+export async function loadHomePage(contentEl) {
   const auth = await checkAuth();
+  if (!auth.loggedIn) return;
 
-  if (auth.loggedIn) {
-    const welcomeEl = document.getElementById("welcome");
-    if (welcomeEl) {
-      welcomeEl.textContent = `Hey, ${auth.user.username}!`;
-    }
-  } else {
-    console.log("Something went wrong -> Welcome Text.");
+  const user = auth.user;
+
+  const welcomeEl = document.getElementById("welcome");
+  if (welcomeEl) {
+    welcomeEl.textContent = `Hey, ${user.username}!`;
   }
 
-  const workouts = getWorkouts();
-  const username = user?.username ?? localStorage.getItem("username") ?? null;
+  let workouts = [];
+  try {
+    const res = await fetch(`${API_BASE}/workouts/${user.id}`);
+    if (!res.ok) throw new Error("Failed to load workouts");
+    workouts = await res.json();
+  } catch (err) {
+    console.error("Workout load error:", err);
+  }
 
-  let html = `<div class="home-header">
-                <h1>My training plan</h1>
-                <p id="welcome"></p>
-              </div>
-              <button id="addNewFromHome" class="btn btn-add-workout">
-                <img alt="add-workout" width="24px" height="24px" src="../frontend/assets/pluswhite.svg" />
-              </button>
-              `;
+  let html = `
+    <div class="home-header">
+      <h1>My training plan</h1>
+      <p id="welcome">Hey, ${user.username}!</p>
+    </div>
+
+    <button id="addNewFromHome" class="btn btn-add-workout">
+      <img alt="add-workout" width="24" height="24" src="../frontend/assets/pluswhite.svg" />
+    </button>
+  `;
 
   if (workouts.length > 0) {
     html += `<ul class="workout-list">`;
+
     workouts.forEach((w) => {
       html += `
         <li>
           <div class="workout-card">
             <div class="workout-left">
               <h3>${escapeHtml(w.name)}</h3>
-              <p class="muted">Created on: ${w.created}</p>
+              <p class="muted">
+                Created on: ${new Date(w.created).toLocaleDateString()}
+              </p>
             </div>
             <div class="workout-right">
               <button class="btn-open" data-id="${w.id}">
-                <img alt="open-workout" width="24px" height="24px" src="../frontend/assets/dots.svg" />
+                <img alt="open-workout" width="24" height="24" src="../frontend/assets/dots.svg" />
               </button>
             </div>
           </div>
         </li>
       `;
     });
+
     html += `</ul>`;
   } else {
-    html += `<p>No workouts found. Start by creating a new workout!</p>
-             <button id="createFirst" class="btn">Create New Workout</button>`;
+    html += `
+      <p>No workouts found. Start by creating a new workout!</p>
+      <button id="createFirst" class="btn">Create New Workout</button>
+    `;
   }
 
   contentEl.innerHTML = html;
 
-  const welcomeEl = document.getElementById("welcome");
-  if (welcomeEl) {
-    if (username) {
-      welcomeEl.textContent = `Hey, ${username}!`;
-    } else {
-      welcomeEl.textContent = `Welcome!`;
-    }
-  }
-
   const addBtn =
     document.getElementById("addNewFromHome") ||
     document.getElementById("createFirst");
+
   if (addBtn) {
     addBtn.addEventListener("click", () => {
       window.dispatchEvent(

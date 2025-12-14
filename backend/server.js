@@ -1,6 +1,10 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+
 const authRoutes = require("./routes/auth");
+const exercisesRoutes = require("./routes/exercises");
+const workoutsRoutes = require("./routes/workouts");
 
 const app = express();
 
@@ -14,5 +18,10 @@ app.use(
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/exercises", exercisesRoutes);
+app.use("/api/workouts", workoutsRoutes);
 
-app.listen(3000, () => console.log("Server läuft auf Port 3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server läuft auf Port ${PORT}`);
+});

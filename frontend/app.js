@@ -5,6 +5,7 @@ import { loadProfilePage } from "../frontend/pages/profile.js";
 import { loadRegisterPage } from "../frontend/pages/register.js";
 import { loadMenuPage } from "../frontend/pages/menu.js";
 import { loadLoginPage } from "./pages/login.js";
+import { loadWorkoutDetailPage } from "./pages/workoutDetail.js";
 
 function checkLoginStatus() {
   const token = localStorage.getItem("authToken");
@@ -131,5 +132,5 @@ window.addEventListener("workoutSaved", (e) => {
 
 window.addEventListener("openWorkout", (e) => {
   const id = e.detail.id;
-  alert("Open workout: " + id);
+  loadWorkoutDetailPage(content, id);
 });
