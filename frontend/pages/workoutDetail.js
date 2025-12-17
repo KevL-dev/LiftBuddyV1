@@ -15,7 +15,10 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
 
     let html = `<h3>${w.name}</h3><p>Erstellt: ${new Date(
       w.created
-    ).toLocaleDateString()}</p>`;
+    ).toLocaleDateString()}</p><button id="deleteWorkout" class="btn btn-danger">
+    Delete workout
+  </button>`;
+
     if (exs.length === 0) html += "<p>Keine Übungen hinzugefügt.</p>";
     else {
       html += `<ul>`;
@@ -27,6 +30,33 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
       html += `</ul>`;
     }
     contentEl.querySelector("#detail").innerHTML = html;
+    const deleteBtn = document.getElementById("deleteWorkout");
+
+    deleteBtn.addEventListener("click", async () => {
+      const confirmed = confirm(
+        "Are you sure you want to delete this workout? This cannot be undone."
+      );
+
+      if (!confirmed) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/workouts/${workoutId}`, {
+          method: "DELETE",
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || "Delete failed");
+        }
+
+        window.dispatchEvent(
+          new CustomEvent("navigate", { detail: { page: "home" } })
+        );
+      } catch (err) {
+        alert("Error deleting workout");
+        console.error(err);
+      }
+    });
   } catch (err) {
     console.error(err);
     contentEl.querySelector("#detail").innerHTML = "<p>Fehler beim Laden.</p>";

@@ -85,4 +85,46 @@ router.post("/:workoutId/exercises", (req, res) => {
   );
 });
 
+router.delete("/:id", (req, res) => {
+  const workoutId = req.params.id;
+
+  if (!workoutId) {
+    return res.status(400).json({ error: "Workout-ID missing" });
+  }
+
+  db.serialize(() => {
+    db.run(
+      "DELETE FROM workout_exercises WHERE workout_id = ?",
+      [workoutId],
+      function (err) {
+        if (err) {
+          console.error("Delete workout_exercises error:", err);
+          return res
+            .status(500)
+            .json({ error: "Fehler beim Löschen der Übungen" });
+        }
+
+        db.run(
+          "DELETE FROM workouts WHERE id = ?",
+          [workoutId],
+          function (err) {
+            if (err) {
+              console.error("Delete workout error:", err);
+              return res
+                .status(500)
+                .json({ error: "Error deleting workout" });
+            }
+
+            if (this.changes === 0) {
+              return res.status(404).json({ error: "Workout not found" });
+            }
+
+            res.json({ success: true });
+          }
+        );
+      }
+    );
+  });
+});
+
 module.exports = router;
