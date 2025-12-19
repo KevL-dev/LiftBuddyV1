@@ -19,17 +19,70 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
     Delete workout
   </button>`;
 
-    if (exs.length === 0) html += "<p>Keine Übungen hinzugefügt.</p>";
-    else {
-      html += `<ul>`;
+    if (exs.length === 0) {
+      html += "<p>Keine Übungen hinzugefügt.</p>";
+    } else {
+      html += `<ul class="workout-exercises">`;
       exs.forEach((e) => {
-        html += `<li><strong>${e.name}</strong> (${e.muscle_group}) — sets: ${
-          e.sets ?? "-"
-        }, reps: ${e.reps ?? "-"}, weight: ${e.weight ?? "-"}</li>`;
+        html += `
+      <li data-id="${e.we_id}">
+        <strong>${e.name}</strong> (${e.muscle_group})<br/>
+
+        Sets:
+        <input type="number" class="sets" value="${e.sets ?? ""}" />
+
+        Reps:
+        <input type="number" class="reps" value="${e.reps ?? ""}" />
+
+        Weight:
+        <input type="number" class="weight" value="${e.weight ?? ""}" />
+
+        <button class="btn-save">Save</button>
+        <button class="btn-delete">Remove</button>
+      </li>
+    `;
       });
       html += `</ul>`;
     }
+
     contentEl.querySelector("#detail").innerHTML = html;
+
+    // SAVE exercise
+    document.querySelectorAll(".btn-save").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const li = e.target.closest("li");
+        const exerciseId = li.dataset.id;
+
+        const sets = li.querySelector(".sets").value || null;
+        const reps = li.querySelector(".reps").value || null;
+        const weight = li.querySelector(".weight").value || null;
+
+        await fetch(`${API_BASE}/workouts/${w.id}/exercises/${exerciseId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sets, reps, weight }),
+        });
+
+        alert("Exercise saved");
+      });
+    });
+
+    // DELETE exercise from workout
+    document.querySelectorAll(".btn-delete").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        if (!confirm("Remove exercise from this workout?")) return;
+
+        const li = e.target.closest("li");
+        const exerciseId = li.dataset.id;
+
+        await fetch(`${API_BASE}/workouts/${w.id}/exercises/${exerciseId}`, {
+          method: "DELETE",
+        });
+
+        li.remove();
+      });
+    });
+
     const deleteBtn = document.getElementById("deleteWorkout");
 
     deleteBtn.addEventListener("click", async () => {

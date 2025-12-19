@@ -127,4 +127,28 @@ router.delete("/:id", (req, res) => {
   });
 });
 
+router.put("/:workoutId/exercises/:id", (req, res) => {
+  const { workoutId, id } = req.params;
+  const { sets, reps, weight } = req.body;
+  
+  db.run(
+    `UPDATE workout_exercises 
+    SET sets = ?, reps = ?, weight = ?
+    WHERE id = ? AND workout_id = ?`,
+    [sets, reps, weight, id, workoutId],
+    function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Update failed" });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: "Exercise not found" });
+      }
+
+      res.json({ success: true });
+    }
+  );
+});
+
 module.exports = router;
