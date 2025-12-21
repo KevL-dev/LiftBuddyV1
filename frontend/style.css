@@ -7,6 +7,8 @@
     rgba(245, 241, 230, 1) 0%,
     rgba(255, 179, 71, 1) 100%
   );
+  --danger-background-color: #FFE5E565;
+  --danger-color: #B22222
 }
 
 * {
@@ -123,7 +125,14 @@ nav button:hover {
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Jolly Lodger", Arial, sans-serif;
+  font-size: 18px;
+  max-height: 32px;
 }
+
 .btn.ghost {
   background: transparent;
   border: 1px solid #555;
@@ -216,6 +225,21 @@ nav button:hover {
   min-width: 180px;
   max-width: 90%;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.workout-detail-btn {
+  background: var(--button-color);
+  color: var(--primary-text-color);
+  font-weight: bold;
+  font-family: "Jolly Lodger", Arial, sans-serif;
+  font-size: 18px;
+  max-height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (min-width: 768px) {
@@ -314,4 +338,51 @@ nav button:hover {
 
 #welcome {
   font-size: 22px;
+}
+
+.workout-exercises {
+  padding: 8px 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list-workout-detail {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border: solid 1px #0000002b;
+  border-radius: 8px;
+  background-color: var(--primary-text-color);
+  color: white;
+  background-color: #222;
+}
+
+.list-workout-detail div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.muscle-group-info {
+  font-size: 20px;
+}
+
+.btn-danger {
+  background-color: var(--danger-background-color);
+  color: var(--danger-color);
+}
+
+.workout-detail-input {
+  color: white;
+}
+
+.detail-header {
+  text-align: center;
+  font-size: 30px;
+}
+
+.workout-name {
+  font-size: 24px;
 }
