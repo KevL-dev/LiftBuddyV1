@@ -1,7 +1,7 @@
 const API_BASE = "http://localhost:3000/api";
 
 export async function loadWorkoutDetailPage(contentEl, workoutId) {
-  contentEl.innerHTML = `<h2>Workout</h2><div id="detail">Lade...</div>`;
+  contentEl.innerHTML = `<h2 class="detail-header">Workout</h2><div id="detail">Lade...</div>`;
   try {
     const res = await fetch(`${API_BASE}/workouts/detail/${workoutId}`);
     if (!res.ok) {
@@ -13,11 +13,13 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
     const w = json.workout;
     const exs = json.exercises;
 
-    let html = `<h3>${w.name}</h3><p>Erstellt: ${new Date(
+    let html = `<h3 class="workout-name" >${w.name}</h3><p>Created: ${new Date(
       w.created
-    ).toLocaleDateString()}</p><button id="deleteWorkout" class="btn btn-danger">
-    Delete workout
-  </button>`;
+    ).toLocaleDateString()}</p>
+    <div class="detail-functions">
+    <button id="deleteWorkout" class="btn btn-danger">Delete workout</button>
+  <button id="backFromDetails" class="btn back-button">Back</button>
+  </div>`;
 
     if (exs.length === 0) {
       html += "<p>Keine Übungen hinzugefügt.</p>";
@@ -25,20 +27,33 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
       html += `<ul class="workout-exercises">`;
       exs.forEach((e) => {
         html += `
-      <li data-id="${e.we_id}">
-        <strong>${e.name}</strong> (${e.muscle_group})<br/>
-
+      <li data-id="${e.we_id}" class="list-workout-detail">
+        <div class="muscle-group-info">
+        ${e.name} (${e.muscle_group})
+        </div>
+        <div>
         Sets:
-        <input type="number" class="sets" value="${e.sets ?? ""}" />
-
+        <input type="number" class="sets workout-detail-input" value="${
+          e.sets ?? ""
+        }" />
+        </div>
+        <div>
         Reps:
-        <input type="number" class="reps" value="${e.reps ?? ""}" />
-
+        <input type="number" class="reps workout-detail-input" value="${
+          e.reps ?? ""
+        }" />
+        </div>
+        <div>
         Weight:
-        <input type="number" class="weight" value="${e.weight ?? ""}" />
-
-        <button class="btn-save">Save</button>
-        <button class="btn-delete">Remove</button>
+        <input type="number" class="weight workout-detail-input" value="${
+          e.weight ?? ""
+        }" />
+        </div>
+        <div>
+          <button class="btn workout-detail-btn">Save</button>
+          <button class="btn">Remove</button>
+        </div>
+        
       </li>
     `;
       });
@@ -47,7 +62,6 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
 
     contentEl.querySelector("#detail").innerHTML = html;
 
-    // SAVE exercise
     document.querySelectorAll(".btn-save").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
         const li = e.target.closest("li");
@@ -67,7 +81,6 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
       });
     });
 
-    // DELETE exercise from workout
     document.querySelectorAll(".btn-delete").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
         if (!confirm("Remove exercise from this workout?")) return;
