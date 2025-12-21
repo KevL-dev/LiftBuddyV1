@@ -7,8 +7,8 @@
     rgba(245, 241, 230, 1) 0%,
     rgba(255, 179, 71, 1) 100%
   );
-  --danger-background-color: #FFE5E565;
-  --danger-color: #B22222
+  --danger-background-color: #ffe5e565;
+  --danger-color: #b22222;
 }
 
 * {
@@ -372,6 +372,8 @@ nav button:hover {
 .btn-danger {
   background-color: var(--danger-background-color);
   color: var(--danger-color);
+  max-width: 100px;
+  width: 100%;
 }
 
 .workout-detail-input {
@@ -385,4 +387,15 @@ nav button:hover {
 
 .workout-name {
   font-size: 24px;
+}
+
+.detail-functions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.back-button {
+  max-width: 100px;
+  width: 100%;
 }

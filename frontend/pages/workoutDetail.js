@@ -15,9 +15,11 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
 
     let html = `<h3 class="workout-name" >${w.name}</h3><p>Created: ${new Date(
       w.created
-    ).toLocaleDateString()}</p><button id="deleteWorkout" class="btn btn-danger">
-    Delete workout
-  </button>`;
+    ).toLocaleDateString()}</p>
+    <div class="detail-functions">
+    <button id="deleteWorkout" class="btn btn-danger">Delete workout</button>
+  <button id="backFromDetails" class="btn back-button">Back</button>
+  </div>`;
 
     if (exs.length === 0) {
       html += "<p>Keine Übungen hinzugefügt.</p>";
@@ -31,15 +33,21 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
         </div>
         <div>
         Sets:
-        <input type="number" class="sets workout-detail-input" value="${e.sets ?? ""}" />
+        <input type="number" class="sets workout-detail-input" value="${
+          e.sets ?? ""
+        }" />
         </div>
         <div>
         Reps:
-        <input type="number" class="reps workout-detail-input" value="${e.reps ?? ""}" />
+        <input type="number" class="reps workout-detail-input" value="${
+          e.reps ?? ""
+        }" />
         </div>
         <div>
         Weight:
-        <input type="number" class="weight workout-detail-input" value="${e.weight ?? ""}" />
+        <input type="number" class="weight workout-detail-input" value="${
+          e.weight ?? ""
+        }" />
         </div>
         <div>
           <button class="btn workout-detail-btn">Save</button>
@@ -73,7 +81,6 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
       });
     });
 
-    // DELETE exercise from workout
     document.querySelectorAll(".btn-delete").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
         if (!confirm("Remove exercise from this workout?")) return;
