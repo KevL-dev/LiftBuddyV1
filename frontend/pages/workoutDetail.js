@@ -123,6 +123,12 @@ export async function loadWorkoutDetailPage(contentEl, workoutId) {
         console.error(err);
       }
     });
+
+    document.getElementById("backFromDetails").addEventListener("click", () => {
+      window.dispatchEvent(
+        new CustomEvent("navigate", { detail: { page: "home" } })
+      );
+    });
   } catch (err) {
     console.error(err);
     contentEl.querySelector("#detail").innerHTML = "<p>Fehler beim Laden.</p>";
