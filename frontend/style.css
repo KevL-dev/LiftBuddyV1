@@ -130,7 +130,7 @@ nav button:hover {
   align-items: center;
   font-family: "Jolly Lodger", Arial, sans-serif;
   font-size: 18px;
-  max-height: 32px;
+  max-height: 39px;
 }
 
 .btn.ghost {
@@ -221,13 +221,14 @@ nav button:hover {
   font-family: "Jolly Lodger", Arial, sans-serif;
   font-size: 1.5em;
   padding: 12px 24px;
-  border-radius: 12px;
+  border-radius: 8px;
   min-width: 180px;
-  max-width: 90%;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
+  max-height: 39px;
+  height: 100%;
 }
 
 .workout-detail-btn {
@@ -236,7 +237,7 @@ nav button:hover {
   font-weight: bold;
   font-family: "Jolly Lodger", Arial, sans-serif;
   font-size: 18px;
-  max-height: 32px;
+  max-height: 39px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -354,7 +355,6 @@ nav button:hover {
   padding: 8px;
   border: solid 1px #0000002b;
   border-radius: 8px;
-  background-color: var(--primary-text-color);
   color: white;
   background-color: #222;
 }
@@ -398,4 +398,49 @@ nav button:hover {
 .back-button {
   max-width: 100px;
   width: 100%;
+}
+
+#new-workout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #222;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+#new-workout-form div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#new-workout-form label {
+  font-size: 20px;
+  color: white;
+}
+
+#new-workout-form input {
+  color: white;
+}
+
+.select-exercise {
+  height: 39px;
+  border-radius: 8px;
+  border-style: none;
+}
+
+#exerciseList {
+  color: white;
+}
+
+.workout-headline-h2 {
+  text-align: center;
+  font-size: 30px;
+}
+
+.workout-headline {
+  color: white;
+  text-align: center;
+  text-decoration: underline;
 }
