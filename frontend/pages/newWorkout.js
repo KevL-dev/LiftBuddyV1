@@ -2,7 +2,7 @@ import { checkAuth } from "../app.js";
 const API_BASE = "http://localhost:3000/api";
 
 export async function loadNewWorkoutPage(contentEl) {
-  contentEl.innerHTML = `<h2>Neues Workout</h2>
+  contentEl.innerHTML = `<h2 class="workout-headline-h2">Neues Workout</h2>
     <div id="new-workout-form">
       <div>
         <label>Name</label>
@@ -10,17 +10,17 @@ export async function loadNewWorkoutPage(contentEl) {
       </div>
       <div>
         <label>Übung</label>
-        <select id="exerciseSelect"><option>Lade...</option></select>
+        <select id="exerciseSelect" class="select-exercise"><option>Lade...</option></select>
       </div>
       <div>
         <label>Sets</label><input id="sets" type="number" min="1" />
         <label>Reps</label><input id="reps" type="number" min="1" />
         <label>Gewicht (kg)</label><input id="weight" type="number" step="0.5" />
       </div>
-      <button id="addExerciseBtn" class="btn">Zur Liste hinzufügen</button>
-      <h3>Aktuelle Übungen</h3>
+      <button id="addExerciseBtn" class="btn buddy-btn">Zur Liste hinzufügen</button>
+      <h3 class="workout-headline">Aktuelle Übungen</h3>
       <ul id="exerciseList"></ul>
-      <button id="saveWorkoutBtn" class="btn btn-primary">Workout speichern</button>
+      <button id="saveWorkoutBtn" class="btn buddy-btn">Workout speichern</button>
     </div>`;
 
   const auth = await checkAuth();
