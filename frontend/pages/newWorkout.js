@@ -3,6 +3,8 @@ const API_BASE = "http://localhost:3000/api";
 
 export async function loadNewWorkoutPage(contentEl) {
   contentEl.innerHTML = `<h2 class="workout-headline-h2">Neues Workout</h2>
+  <button id="newWorkoutBackBtn" class="btn">Back</button>
+
     <div id="new-workout-form">
       <div>
         <label>Name</label>
@@ -74,6 +76,12 @@ export async function loadNewWorkoutPage(contentEl) {
     });
   }
 
+  document.getElementById("newWorkoutBackBtn").addEventListener("click", () => {
+    window.dispatchEvent(
+      new CustomEvent("navigate", { detail: { page: "home" } })
+    );
+  });
+
   document.getElementById("addExerciseBtn").addEventListener("click", () => {
     const sel = exerciseSelect.value;
     const selected = exercises.find((e) => String(e.id) === String(sel));
@@ -101,7 +109,6 @@ export async function loadNewWorkoutPage(contentEl) {
         return alert("Füge mindestens eine Übung hinzu.");
 
       try {
-        // 1) Workout anlegen
         const res = await fetch(`${API_BASE}/workouts`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -110,7 +117,6 @@ export async function loadNewWorkoutPage(contentEl) {
         const data = await res.json();
         if (!data.workoutId) throw new Error("Kein workoutId");
 
-        // 2) Jede Übung anhängen
         for (const ex of currentExercises) {
           await fetch(`${API_BASE}/workouts/${data.workoutId}/exercises`, {
             method: "POST",
@@ -124,7 +130,6 @@ export async function loadNewWorkoutPage(contentEl) {
           });
         }
 
-        // event: workoutSaved (app.js lauscht darauf)
         window.dispatchEvent(new CustomEvent("workoutSaved"));
       } catch (err) {
         console.error("Fehler beim Speichern", err);
