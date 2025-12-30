@@ -104,4 +104,47 @@ router.post("/logout", (req, res) => {
   );
 });
 
+router.put("/profile", (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: "No auth header" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  const { username, email } = req.body;
+
+  if (!username || !email) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  db.get(
+    `SELECT id FROM users WHERE authToken = ?`,
+    [token],
+    (err, user) => {
+      if (err || !user) {
+        return res.status(401).json({ error: "Invalid token" });
+      }
+
+      db.run(
+        `UPDATE users SET username = ?, email = ? WHERE id = ?`,
+        [username, email, user.id],
+        function (err) {
+          if (err) {
+            if (err.message.includes("UNIQUE")) {
+              return res.status(400).json({ error: "Email already exists" });
+            }
+            return res.status(500).json({ error: "Database error" });
+          }
+
+          res.json({
+            success: true,
+            user: { id: user.id, username, email },
+          });
+        }
+      );
+    }
+  );
+});
+
+
 module.exports = router;
