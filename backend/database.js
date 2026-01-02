@@ -86,4 +86,13 @@ db.serialize(() => {
   });
 });
 
+db.all(`PRAGMA table_info(users);`, (err, columns) => {
+  const hasActive = columns.some((col) => col.name === "active");
+
+  if (!hasActive) {
+    console.log("Adding active column to users table...");
+    db.run(`ALTER TABLE users ADD COLUMN active INTEGER DEFAULT 1`);
+  }
+});
+
 module.exports = db;

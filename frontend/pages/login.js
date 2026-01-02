@@ -41,26 +41,39 @@ export function loadLoginPage(content) {
   document.querySelector("#loginBtn").addEventListener("click", login);
 
   async function login() {
-    const email = document.querySelector("#loginEmail").value;
-    const password = document.querySelector("#loginPassword").value;
+    const email = emailInput.value;
+    const password = passwordInput.value;
 
-    const res = await fetch("http://localhost:3000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    msg.textContent = "";
 
-    const data = await res.json();
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (data.success) {
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (data.error === "Account is deactivated") {
+          msg.textContent =
+            "Your account has been deactivated. Please contact support.";
+        } else {
+          msg.textContent = data.error || "Login failed";
+        }
+        return;
+      }
+
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("username", data.user.username);
       localStorage.setItem("profileEmail", data.user.email);
+
       updateMenu({ loggedIn: true });
-      updateWelcome();
       loadPage("home");
-    } else {
-      console.log("Something went wrong: " + data.error);
+    } catch (err) {
+      console.error(err);
+      msg.textContent = "Server not reachable";
     }
   }
 

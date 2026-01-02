@@ -34,11 +34,20 @@ router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
   db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
-    if (err || !user)
+    if (err || !user) {
       return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    if (user.active === 0) {
+      return res.status(403).json({
+        error: "Account is deactivated",
+      });
+    }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) return res.status(400).json({ error: "Invalid credentials" });
+    if (!valid) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
 
     const token = generateToken();
 
@@ -117,34 +126,59 @@ router.put("/profile", (req, res) => {
     return res.status(400).json({ error: "Missing fields" });
   }
 
-  db.get(
-    `SELECT id FROM users WHERE authToken = ?`,
+  db.get(`SELECT id FROM users WHERE authToken = ?`, [token], (err, user) => {
+    if (err || !user) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    db.run(
+      `UPDATE users SET username = ?, email = ? WHERE id = ?`,
+      [username, email, user.id],
+      function (err) {
+        if (err) {
+          if (err.message.includes("UNIQUE")) {
+            return res.status(400).json({ error: "Email already exists" });
+          }
+          return res.status(500).json({ error: "Database error" });
+        }
+
+        res.json({
+          success: true,
+          user: { id: user.id, username, email },
+        });
+      }
+    );
+  });
+});
+
+router.put("/deactivate", (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: "No auth header" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  db.run(
+    `
+    UPDATE users 
+    SET active = 0, authToken = NULL 
+    WHERE authToken = ?
+    `,
     [token],
-    (err, user) => {
-      if (err || !user) {
+    function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      if (this.changes === 0) {
         return res.status(401).json({ error: "Invalid token" });
       }
 
-      db.run(
-        `UPDATE users SET username = ?, email = ? WHERE id = ?`,
-        [username, email, user.id],
-        function (err) {
-          if (err) {
-            if (err.message.includes("UNIQUE")) {
-              return res.status(400).json({ error: "Email already exists" });
-            }
-            return res.status(500).json({ error: "Database error" });
-          }
-
-          res.json({
-            success: true,
-            user: { id: user.id, username, email },
-          });
-        }
-      );
+      res.json({ success: true });
     }
   );
 });
-
 
 module.exports = router;
