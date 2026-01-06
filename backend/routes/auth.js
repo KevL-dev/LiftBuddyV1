@@ -181,4 +181,36 @@ router.put("/deactivate", (req, res) => {
   );
 });
 
+router.put("/change-password", (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: "No auth header" });
+  }
+  const token = authHeader.split(" ")[1];
+  const { password } = req.body;
+  if (!password) {
+    return res.status(400).json({ error: "No password provided" });
+  }
+
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Hashing error" });
+    }
+
+    db.run(
+      `UPDATE users SET passwordHash = ? WHERE authToken = ?`,
+      [hashedPassword, token],
+      function (err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Database error" });
+        }
+
+        res.json({ success: true });
+      }
+    );
+  });
+});
+
 module.exports = router;
