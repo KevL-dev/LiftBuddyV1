@@ -12,16 +12,15 @@ export function loadSettingsPage(content) {
     <div>
       <button id="changePasswordBtn" class="btn">Change Password</button>
     </div>
-    <!-- HTML -->
-<div id="passwordModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
-  <div style="background:white; padding:20px; border-radius:8px;">
-    <h3>Change Password</h3>
-    <input type="password" id="newPasswordInput" placeholder="New password" />
-    <button id="submitPasswordBtn">Submit</button>
-    <button onclick="closeModal()">Cancel</button>
-  </div>
-</div>
 
+    <div id="passwordModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
+      <div style="background:white; padding:20px; border-radius:8px;">
+        <h3>Change Password</h3>
+        <input type="password" id="newPasswordInput" placeholder="New password" />
+        <button id="submitPasswordBtn">Submit</button>
+        <button onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
   `;
 
   document
