@@ -445,3 +445,14 @@ nav button:hover {
   text-align: center;
   text-decoration: underline;
 }
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-self: center;
+}
+
+#changePasswordBtn {
+  width: 100%;
+}
