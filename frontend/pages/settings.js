@@ -8,17 +8,19 @@ export function loadSettingsPage(content) {
       <button id="deactivateAccountBtn" class="btn danger-btn">
         Deactivate Account
       </button>
-    </div>
-    <div>
+
       <button id="changePasswordBtn" class="btn">Change Password</button>
     </div>
+    
 
     <div id="passwordModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
-      <div style="background:white; padding:20px; border-radius:8px;">
-        <h3>Change Password</h3>
+      <div style="background:#222; padding:20px; border-radius:8px;">
+        <h3 style=" color:white;">Change Password</h3>
         <input type="password" id="newPasswordInput" placeholder="New password" />
-        <button id="submitPasswordBtn">Submit</button>
-        <button onclick="closeModal()">Cancel</button>
+        <div class="modal-buttons" style="display:flex; gap:8px; flex-direction: row; justify-content:space-between; margin-top:12px;">
+        <button id="submitPasswordBtn" class="btn">Submit</button>
+        <button onclick="closeModal()" class="btn">Cancel</button>
+        </div>
       </div>
     </div>
   `;
