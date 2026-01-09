@@ -43,17 +43,19 @@ export function loadSettingsPage(content) {
     document.getElementById("passwordModal").style.display = "flex";
   });
 
-  document.getElementById("deactivateAccountBtn").addEventListener("click", () => {
-    document.getElementById("passwordModalAccount").style.display = "flex";
-  });
+  document
+    .getElementById("deactivateAccountBtn")
+    .addEventListener("click", () => {
+      document.getElementById("passwordModalAccount").style.display = "flex";
+    });
 
   document
-  .getElementById("cancelPasswordBtn")
-  .addEventListener("click", closeModal);
+    .getElementById("cancelPasswordBtn")
+    .addEventListener("click", closeModal);
 
   document
-  .getElementById("cancelAccountBtn")
-  .addEventListener("click", closeModalAccount);
+    .getElementById("cancelAccountBtn")
+    .addEventListener("click", closeModalAccount);
 
   function closeModal() {
     document.getElementById("passwordModal").style.display = "none";
@@ -107,41 +109,10 @@ async function deactivateAccount() {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!res.ok) { 
-      alert("Server error during deactivation");
-      return;
-    }
-    localStorage.clear();
-    location.reload();
-  } catch (err) {
-    console.error(err);
-    alert("Server not reachable");
-  }
-
-}
-
-async function confirmDeactivation() {
-  const confirm = window.confirm(
-    "Do you really want to deactivate your account?\n\nYou won't be able to log in afterwards."
-  );
-
-  if (!confirm) return;
-
-  const token = localStorage.getItem("authToken");
-
-  try {
-    const res = await fetch("http://localhost:3000/api/auth/deactivate", {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
     if (!res.ok) {
       alert("Server error during deactivation");
       return;
     }
-
     localStorage.clear();
     location.reload();
   } catch (err) {
