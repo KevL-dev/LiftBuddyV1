@@ -1,3 +1,11 @@
 {
-    "workbench.colorTheme": "Default Dark+"
+    "workbench.colorTheme": "Default Dark+",
+    "liveServer.settings.ignoreFiles": [
+        "**/*.db",
+        "**/*.db-shm",
+        "**/*.db-wal",
+        "**/node_modules/**",
+        "**/.git/**",
+        "**/backend/**"
+    ]
 }

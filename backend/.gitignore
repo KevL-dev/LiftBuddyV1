@@ -1,4 +1,5 @@
 node_modules/
-liftbuddy.db
+*.db
 .env
+.env.*
 session/

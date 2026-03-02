@@ -1,34 +1,30 @@
 import { loadRegisterPage } from "./register.js";
-import { loadHomePage } from "./home.js";
-import { loadPage } from "../app.js";
-import { updateMenu } from "../app.js";
+import { loadPage, updateMenu } from "../app.js";
 
 export function loadLoginPage(content) {
   let html = `
     <div><h1>Login</h1></div>
 
-    <div class="login-form"> 
-      <div class="profile-content">
-
-          <label for="email">Email:</label>
-          <input type="email" id="loginEmail" name="email" />
-        </div>
-
-        <div class="profile-field">
-          <label for="password">Password:</label>
-          <input type="password" id="loginPassword" name="password" />
-        </div>
-
-        <p class="change-site">Don't have an account yet? 
-          <span id="goRegister" class="link">Register</span>
-        </p>
-
-        <div class="middle-pos-btn">
-          <button class="btn buddy-btn" id="loginBtn">Login</button>
-        </div>
-
-        <p id="loginMessage"></p>
+    <div class="login-form">
+      <div class="profile-field">
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="email" required />
       </div>
+
+      <div class="profile-field">
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="password" required />
+      </div>
+
+      <p class="change-site">Don't have an account yet?
+        <span id="goRegister" class="link">Register</span>
+      </p>
+
+      <div class="middle-pos-btn">
+        <button class="btn buddy-btn" id="loginBtn">Login</button>
+      </div>
+
+      <p id="loginMessage"></p>
     </div>
   `;
 
@@ -41,10 +37,15 @@ export function loadLoginPage(content) {
   document.querySelector("#loginBtn").addEventListener("click", login);
 
   async function login() {
-    const email = emailInput.value;
+    const email = emailInput.value.trim();
     const password = passwordInput.value;
 
     msg.textContent = "";
+
+    if (!email || !password) {
+      msg.textContent = "Please fill in all fields.";
+      return;
+    }
 
     try {
       const res = await fetch("http://localhost:3000/api/auth/login", {
@@ -59,6 +60,8 @@ export function loadLoginPage(content) {
         if (data.error === "Account is deactivated") {
           msg.textContent =
             "Your account has been deactivated. Please contact support.";
+        } else if (res.status === 429) {
+          msg.textContent = data.error;
         } else {
           msg.textContent = data.error || "Login failed";
         }

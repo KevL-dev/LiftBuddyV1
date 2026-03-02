@@ -1,16 +1,58 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const Users = require("../models/users");
 const router = express.Router();
 const crypto = require("crypto");
 const db = require("../database.js");
+const rateLimit = require("express-rate-limit");
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many attempts. Please wait 15 minutes.." },
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many registration attempts. Please wait 1 hour." },
+});
+
+const TOKEN_TTL_DAYS = 30;
 
 function generateToken() {
   return crypto.randomBytes(32).toString("hex");
 }
 
-router.post("/register", (req, res) => {
+function tokenExpiryDate() {
+  return new Date(Date.now() + TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000).toISOString();
+}
+
+function validatePassword(password) {
+  if (!password || password.length < 8)
+    return "Password must be at least 8 characters long.";
+  if (!/[A-Z]/.test(password))
+    return "Password must contain at least one uppercase letter (A–Z).";
+  if (!/[a-z]/.test(password))
+    return "Password must contain at least one lowercase letter (a–z).";
+  if (!/[0-9]/.test(password))
+    return "Password must contain at least one number (0–9).";
+  if (!/[^A-Za-z0-9]/.test(password))
+    return "Password must contain at least one special character (!@#$%...).";
+  return null;
+}
+
+router.post("/register", registerLimiter, (req, res) => {
   const { username, email, password } = req.body;
+
+  if (!username || !email || !password)
+    return res.status(400).json({ error: "All fields are required." });
+
+  const pwError = validatePassword(password);
+  if (pwError) return res.status(400).json({ error: pwError });
 
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) return res.status(500).json({ error: "Hash error" });
@@ -25,12 +67,12 @@ router.post("/register", (req, res) => {
         if (err) return res.status(400).json({ error: "Email exists already" });
 
         return res.json({ success: true });
-      }
+      },
     );
   });
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", loginLimiter, (req, res) => {
   const { email, password } = req.body;
 
   db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
@@ -50,10 +92,11 @@ router.post("/login", (req, res) => {
     }
 
     const token = generateToken();
+    const tokenExpires = tokenExpiryDate();
 
     db.run(
-      `UPDATE users SET authToken = ? WHERE id = ?`,
-      [token, user.id],
+      `UPDATE users SET authToken = ?, tokenExpires = ? WHERE id = ?`,
+      [token, tokenExpires, user.id],
       () => {
         res.json({
           success: true,
@@ -64,7 +107,7 @@ router.post("/login", (req, res) => {
             email: user.email,
           },
         });
-      }
+      },
     );
   });
 });
@@ -75,16 +118,21 @@ router.post("/token-login", (req, res) => {
   if (!token) return res.json({ loggedIn: false });
 
   db.get(
-    `SELECT id, username, email FROM users WHERE authToken = ?`,
+    `SELECT id, username, email, tokenExpires FROM users WHERE authToken = ?`,
     [token],
     (err, user) => {
       if (err || !user) return res.json({ loggedIn: false });
+
+      if (!user.tokenExpires || new Date(user.tokenExpires) < new Date()) {
+        db.run(`UPDATE users SET authToken = NULL, tokenExpires = NULL WHERE id = ?`, [user.id]);
+        return res.json({ loggedIn: false });
+      }
 
       res.json({
         loggedIn: true,
         user,
       });
-    }
+    },
   );
 });
 
@@ -96,7 +144,7 @@ router.post("/logout", (req, res) => {
   }
 
   db.run(
-    `UPDATE users SET authToken = NULL WHERE authToken = ?`,
+    `UPDATE users SET authToken = NULL, tokenExpires = NULL WHERE authToken = ?`,
     [token],
     function (err) {
       if (err) {
@@ -109,7 +157,7 @@ router.post("/logout", (req, res) => {
       }
 
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -146,7 +194,7 @@ router.put("/profile", (req, res) => {
           success: true,
           user: { id: user.id, username, email },
         });
-      }
+      },
     );
   });
 });
@@ -177,7 +225,7 @@ router.put("/deactivate", (req, res) => {
       }
 
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -191,6 +239,9 @@ router.put("/change-password", (req, res) => {
   if (!password) {
     return res.status(400).json({ error: "No password provided" });
   }
+
+  const pwError = validatePassword(password);
+  if (pwError) return res.status(400).json({ error: pwError });
 
   bcrypt.hash(password, 10, (err, hashedPassword) => {
     if (err) {
@@ -208,7 +259,7 @@ router.put("/change-password", (req, res) => {
         }
 
         res.json({ success: true });
-      }
+      },
     );
   });
 });

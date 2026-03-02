@@ -5,7 +5,43 @@ import { loadProfilePage } from "../frontend/pages/profile.js";
 import { loadRegisterPage } from "../frontend/pages/register.js";
 import { loadMenuPage } from "../frontend/pages/menu.js";
 import { loadLoginPage } from "./pages/login.js";
-import { loadWorkoutDetailPage } from "./pages/workoutDetail.js";
+import { loadNewPlanPage } from "../frontend/pages/newPlan.js";
+import { loadPlanDetailPage } from "../frontend/pages/planDetail.js";
+import { loadSessionDetailPage } from "../frontend/pages/sessionDetail.js";
+
+window.__activePage = "init";
+
+export function setActivePage(page) {
+  window.__activePage = page;
+}
+
+export function isActivePage(page) {
+  return window.__activePage === page;
+}
+
+export function loadPage(page) {
+  setActivePage(page);
+  const content = document.getElementById("content");
+  if (page === "home") {
+    loadHomePage(content);
+  } else if (page === "newWorkout") {
+    loadNewWorkoutPage(content);
+  } else if (page === "settings") {
+    loadSettingsPage(content);
+  } else if (page === "profile") {
+    loadProfilePage(content);
+  } else if (page === "register") {
+    loadRegisterPage(content);
+  } else if (page === "login") {
+    loadLoginPage(content);
+  } else if (page === "menu") {
+    loadMenuPage(content);
+  } else if (page === "newPlan") {
+    loadNewPlanPage(content);
+  } else {
+    content.innerHTML = `<h2>${page}</h2>`;
+  }
+}
 
 function checkLoginStatus() {
   const token = localStorage.getItem("authToken");
@@ -23,6 +59,15 @@ function checkLoginStatus() {
 checkLoginStatus();
 
 export function updateMenu(auth) {
+  const navbar = document.getElementById("navbar");
+  if (navbar) {
+    if (auth.loggedIn) {
+      navbar.classList.remove("hide");
+    } else {
+      navbar.classList.add("hide");
+    }
+  }
+
   const loginBtn = document.querySelector("[data-page='login']");
   const registerBtn = document.querySelector("[data-page='register']");
   const logoutBtn = document.getElementById("logoutBtn");
@@ -55,8 +100,10 @@ window.addEventListener("load", async () => {
     updateMenu(auth);
 
     if (auth.loggedIn) {
+      setActivePage("home");
       loadHomePage(content, auth.user);
     } else {
+      setActivePage("login");
       loadLoginPage(content);
     }
   }, 800);
@@ -80,39 +127,21 @@ export async function checkAuth() {
   }
 }
 
-export function loadPage(page) {
-  const content = document.getElementById("content");
-  if (page === "home") {
-    loadHomePage(content);
-  } else if (page === "newWorkout") {
-    loadNewWorkoutPage(content);
-  } else if (page === "settings") {
-    loadSettingsPage(content);
-  } else if (page === "profile") {
-    loadProfilePage(content);
-  } else if (page === "register") {
-    loadRegisterPage(content);
-  } else if (page === "login") {
-    loadLoginPage(content);
-  } else if (page === "menu") {
-    loadMenuPage(content);
-  } else {
-    content.innerHTML = `<h2>${page}</h2>`;
-  }
-}
-
 document.getElementById("content").addEventListener("click", (e) => {
-  const target = e.target;
+  const menuItem = e.target.closest(".menu-item");
+  if (!menuItem) return;
 
-  if (target.classList.contains("menu-item")) {
-    const page = target.dataset.page;
+  const menuSlider = menuItem.closest("#menu-slider");
+  if (!menuSlider) return;
 
-    const app = document.getElementById("app");
-    app.classList.remove("shifted");
-    isMenuOpen = false;
+  const page = menuItem.dataset.page;
+  if (!page) return;
 
-    loadPage(page);
-  }
+  const app = document.getElementById("app");
+  app.classList.remove("shifted");
+  isMenuOpen = false;
+
+  loadPage(page);
 });
 
 document.querySelectorAll("nav button").forEach((btn) => {
@@ -126,11 +155,18 @@ window.addEventListener("navigate", (e) => {
   loadPage(e.detail.page);
 });
 
-window.addEventListener("workoutSaved", (e) => {
+window.addEventListener("workoutSaved", () => {
   loadPage("home");
 });
 
-window.addEventListener("openWorkout", (e) => {
-  const id = e.detail.id;
-  loadWorkoutDetailPage(content, id);
+window.addEventListener("openPlan", (e) => {
+  setActivePage("planDetail");
+  const content = document.getElementById("content");
+  loadPlanDetailPage(content, e.detail.id);
+});
+
+window.addEventListener("openSession", (e) => {
+  setActivePage("sessionDetail");
+  const content = document.getElementById("content");
+  loadSessionDetailPage(content, e.detail.id);
 });

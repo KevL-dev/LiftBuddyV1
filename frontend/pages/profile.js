@@ -14,10 +14,10 @@ export function loadProfilePage(content) {
         <label for="email">Email:</label>
         <input type="email" id="profileEmail" />
       </div>
+    </div>
 
-      <div class="middle-pos-btn">
-        <button class="btn buddy-btn" id="saveProfileBtn">Save Profile</button>
-      </div>
+    <div class="middle-pos-btn">
+      <button class="btn buddy-btn" id="saveProfileBtn">Save Profile</button>
     </div>
   `;
 
