@@ -22,8 +22,14 @@ const registerLimiter = rateLimit({
   message: { error: "Too many registration attempts. Please wait 1 hour." },
 });
 
+const TOKEN_TTL_DAYS = 30;
+
 function generateToken() {
   return crypto.randomBytes(32).toString("hex");
+}
+
+function tokenExpiryDate() {
+  return new Date(Date.now() + TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000).toISOString();
 }
 
 function validatePassword(password) {
@@ -87,10 +93,11 @@ router.post("/login", loginLimiter, (req, res) => {
     }
 
     const token = generateToken();
+    const tokenExpires = tokenExpiryDate();
 
     db.run(
-      `UPDATE users SET authToken = ? WHERE id = ?`,
-      [token, user.id],
+      `UPDATE users SET authToken = ?, tokenExpires = ? WHERE id = ?`,
+      [token, tokenExpires, user.id],
       () => {
         res.json({
           success: true,
@@ -112,10 +119,15 @@ router.post("/token-login", (req, res) => {
   if (!token) return res.json({ loggedIn: false });
 
   db.get(
-    `SELECT id, username, email FROM users WHERE authToken = ?`,
+    `SELECT id, username, email, tokenExpires FROM users WHERE authToken = ?`,
     [token],
     (err, user) => {
       if (err || !user) return res.json({ loggedIn: false });
+
+      if (!user.tokenExpires || new Date(user.tokenExpires) < new Date()) {
+        db.run(`UPDATE users SET authToken = NULL, tokenExpires = NULL WHERE id = ?`, [user.id]);
+        return res.json({ loggedIn: false });
+      }
 
       res.json({
         loggedIn: true,
@@ -133,7 +145,7 @@ router.post("/logout", (req, res) => {
   }
 
   db.run(
-    `UPDATE users SET authToken = NULL WHERE authToken = ?`,
+    `UPDATE users SET authToken = NULL, tokenExpires = NULL WHERE authToken = ?`,
     [token],
     function (err) {
       if (err) {

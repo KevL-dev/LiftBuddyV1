@@ -147,10 +147,15 @@ db.serialize(() => {
 
 db.all(`PRAGMA table_info(users);`, (err, columns) => {
   const hasActive = columns.some((col) => col.name === "active");
-
   if (!hasActive) {
     console.log("Adding active column to users table...");
     db.run(`ALTER TABLE users ADD COLUMN active INTEGER DEFAULT 1`);
+  }
+
+  const hasTokenExpires = columns.some((col) => col.name === "tokenExpires");
+  if (!hasTokenExpires) {
+    console.log("Adding tokenExpires column to users table...");
+    db.run(`ALTER TABLE users ADD COLUMN tokenExpires TEXT`);
   }
 });
 
