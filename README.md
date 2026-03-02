@@ -8,7 +8,7 @@ A mobile-first fitness tracking web app built as a single-page application (SPA)
 
 | Login | Home | Session |
 |---|---|---|
-| ![Login](docs/screenshots/login.png) | ![Home](docs/screenshots/home.png) | ![Session](docs/screenshots/session.png) |
+| ![Login](docs/screenshots/newplan.png) | ![Home](docs/screenshots/menu.png) | ![Session](docs/screenshots/register.png) |
 
 ---
 
