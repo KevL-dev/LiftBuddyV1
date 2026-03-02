@@ -140,9 +140,3 @@ All endpoints except `/api/auth/*` require an `Authorization: Bearer <token>` he
 - **Ownership checks** on all data endpoints — users can only access their own plans, sessions and workouts
 - HTML output escaped throughout the frontend to prevent XSS
 - CORS restricted to `localhost:3000`
-
----
-
-## License
-
-MIT
