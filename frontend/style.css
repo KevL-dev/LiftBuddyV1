@@ -456,3 +456,16 @@ nav button:hover {
 #changePasswordBtn {
   width: 100%;
 }
+
+.stats-box {
+  background: #222;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0 14px 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: grid;
+  gap: 6px;
+  font-size: 18px;
+}
+
