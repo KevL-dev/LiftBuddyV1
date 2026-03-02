@@ -42,6 +42,8 @@ export function loadMenuPage(content) {
     localStorage.removeItem("authToken");
     localStorage.removeItem("username");
 
+    updateMenu({ loggedIn: false });
+
     window.dispatchEvent(
       new CustomEvent("navigate", { detail: { page: "login" } })
     );

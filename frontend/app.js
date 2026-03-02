@@ -59,6 +59,15 @@ function checkLoginStatus() {
 checkLoginStatus();
 
 export function updateMenu(auth) {
+  const navbar = document.getElementById("navbar");
+  if (navbar) {
+    if (auth.loggedIn) {
+      navbar.classList.remove("hide");
+    } else {
+      navbar.classList.add("hide");
+    }
+  }
+
   const loginBtn = document.querySelector("[data-page='login']");
   const registerBtn = document.querySelector("[data-page='register']");
   const logoutBtn = document.getElementById("logoutBtn");

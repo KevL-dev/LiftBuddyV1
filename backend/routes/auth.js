@@ -26,8 +26,28 @@ function generateToken() {
   return crypto.randomBytes(32).toString("hex");
 }
 
+function validatePassword(password) {
+  if (!password || password.length < 8)
+    return "Password must be at least 8 characters long.";
+  if (!/[A-Z]/.test(password))
+    return "Password must contain at least one uppercase letter (A–Z).";
+  if (!/[a-z]/.test(password))
+    return "Password must contain at least one lowercase letter (a–z).";
+  if (!/[0-9]/.test(password))
+    return "Password must contain at least one number (0–9).";
+  if (!/[^A-Za-z0-9]/.test(password))
+    return "Password must contain at least one special character (!@#$%...).";
+  return null;
+}
+
 router.post("/register", registerLimiter, (req, res) => {
   const { username, email, password } = req.body;
+
+  if (!username || !email || !password)
+    return res.status(400).json({ error: "All fields are required." });
+
+  const pwError = validatePassword(password);
+  if (pwError) return res.status(400).json({ error: pwError });
 
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) return res.status(500).json({ error: "Hash error" });
@@ -208,6 +228,9 @@ router.put("/change-password", (req, res) => {
   if (!password) {
     return res.status(400).json({ error: "No password provided" });
   }
+
+  const pwError = validatePassword(password);
+  if (pwError) return res.status(400).json({ error: pwError });
 
   bcrypt.hash(password, 10, (err, hashedPassword) => {
     if (err) {

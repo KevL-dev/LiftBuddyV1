@@ -1,9 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database");
+const requireAuth = require("../middleware/requireAuth");
+
+router.use(requireAuth);
 
 router.get("/:userId", (req, res) => {
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
+
+  if (userId !== req.user.id) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
 
   db.all(
     "SELECT * FROM workouts WHERE user_id = ? ORDER BY id DESC",
@@ -28,6 +35,10 @@ router.get("/detail/:workoutId", (req, res) => {
     }
     if (!workout) return res.status(404).json({ error: "Workout not found" });
 
+    if (workout.user_id !== req.user.id) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     db.all(
       `SELECT we.id as we_id, we.sets, we.reps, we.weight,
               e.id as exercise_id, e.name, e.muscle_group
@@ -47,9 +58,10 @@ router.get("/detail/:workoutId", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const { user_id, name } = req.body;
-  if (!user_id || !name)
-    return res.status(400).json({ error: "user_id and name required" });
+  const { name } = req.body;
+  const user_id = req.user.id;
+
+  if (!name) return res.status(400).json({ error: "name required" });
 
   const created = new Date().toISOString();
   db.run(
@@ -105,8 +117,8 @@ router.delete("/:id", (req, res) => {
         }
 
         db.run(
-          "DELETE FROM workouts WHERE id = ?",
-          [workoutId],
+          "DELETE FROM workouts WHERE id = ? AND user_id = ?",
+          [workoutId, req.user.id],
           function (err) {
             if (err) {
               console.error("Delete workout error:", err);
@@ -130,7 +142,7 @@ router.put("/:workoutId/exercises/:id", (req, res) => {
   const { sets, reps, weight } = req.body;
 
   db.run(
-    `UPDATE workout_exercises 
+    `UPDATE workout_exercises
     SET sets = ?, reps = ?, weight = ?
     WHERE id = ? AND workout_id = ?`,
     [sets, reps, weight, id, workoutId],
@@ -156,9 +168,13 @@ router.get("/:workoutId/stats", (req, res) => {
     if (err) return res.status(500).json({ error: "Database error" });
     if (!workout) return res.status(404).json({ error: "Workout not found" });
 
+    if (workout.user_id !== req.user.id) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     db.all(
       `
-      SELECT 
+      SELECT
         we.exercise_id,
         e.name,
         e.muscle_group,
@@ -209,7 +225,7 @@ router.get("/:workoutId/stats", (req, res) => {
 
             db.all(
               `
-              SELECT 
+              SELECT
                 we.exercise_id,
                 COALESCE(we.sets,0) * COALESCE(we.reps,0) * COALESCE(we.weight,0) AS volume
               FROM workout_exercises we
