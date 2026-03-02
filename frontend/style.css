@@ -707,9 +707,9 @@ select option {
 }
 
 .login-form {
-  background: var(--glass);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--menu-bg);
+  /* backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px); */
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   padding: 24px;
