@@ -23,7 +23,7 @@ export async function loadHomePage(contentEl) {
   let html = `
     <div class="home-header">
       <h1>My training plans</h1>
-      <p id="welcome">Hey, ${user.username}!</p>
+      <p id="welcome">Hey, ${escapeHtml(user.username)}!</p>
     </div>
 
     <button id="addNewFromHome" class="btn btn-add-workout">
