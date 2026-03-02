@@ -4,12 +4,29 @@ const Users = require("../models/users");
 const router = express.Router();
 const crypto = require("crypto");
 const db = require("../database.js");
+const rateLimit = require("express-rate-limit");
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many attempts. Please wait 15 minutes.." },
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many registration attempts. Please wait 1 hour." },
+});
 
 function generateToken() {
   return crypto.randomBytes(32).toString("hex");
 }
 
-router.post("/register", (req, res) => {
+router.post("/register", registerLimiter, (req, res) => {
   const { username, email, password } = req.body;
 
   bcrypt.hash(password, 10, (err, hash) => {
@@ -25,12 +42,12 @@ router.post("/register", (req, res) => {
         if (err) return res.status(400).json({ error: "Email exists already" });
 
         return res.json({ success: true });
-      }
+      },
     );
   });
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", loginLimiter, (req, res) => {
   const { email, password } = req.body;
 
   db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
@@ -64,7 +81,7 @@ router.post("/login", (req, res) => {
             email: user.email,
           },
         });
-      }
+      },
     );
   });
 });
@@ -84,7 +101,7 @@ router.post("/token-login", (req, res) => {
         loggedIn: true,
         user,
       });
-    }
+    },
   );
 });
 
@@ -109,7 +126,7 @@ router.post("/logout", (req, res) => {
       }
 
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -146,7 +163,7 @@ router.put("/profile", (req, res) => {
           success: true,
           user: { id: user.id, username, email },
         });
-      }
+      },
     );
   });
 });
@@ -177,7 +194,7 @@ router.put("/deactivate", (req, res) => {
       }
 
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -208,7 +225,7 @@ router.put("/change-password", (req, res) => {
         }
 
         res.json({ success: true });
-      }
+      },
     );
   });
 });
