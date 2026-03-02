@@ -1,11 +1,5 @@
 :root {
-  --blue-500: #5b8fd6;
-  --blue-400: #7ab3f0;
   --blue-300: #a8ccf5;
-  --blue-200: #c8dffa;
-  --blue-dark: #3a6fc4;
-  --anthracite: #0d0e1a;
-  --anthracite-2: #080910;
   --menu-bg: rgb(18 18 18 / 96%);
 
   --amber-500: #f5a623;
@@ -19,7 +13,6 @@
 
   --glass: rgba(60, 60, 60, 0.78);
   --glass-mid: rgba(72, 72, 72, 0.88);
-  --glass-nav: rgba(45, 45, 45, 0.8);
   --border: rgba(255, 255, 255, 0.1);
   --border-acc: rgba(241, 205, 138, 0.5);
 
@@ -29,11 +22,9 @@
 
   --sh-sm: 0 2px 10px rgba(0, 0, 0, 0.22);
   --sh-md: 0 5px 22px rgba(0, 0, 0, 0.3);
-  --sh-lg: 0 10px 36px rgba(0, 0, 0, 0.38);
 
   --r-sm: 10px;
   --r-md: 14px;
-  --r-lg: 20px;
 
   --font-display: "Jolly Lodger", Arial, sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
@@ -91,9 +82,6 @@ p {
 }
 
 .hidden {
-  display: none !important;
-}
-.hide {
   display: none !important;
 }
 
