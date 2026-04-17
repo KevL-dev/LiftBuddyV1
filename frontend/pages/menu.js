@@ -78,7 +78,5 @@ document.addEventListener("click", (e) => {
     const app = document.getElementById("app");
     app.classList.remove("shifted");
     isMenuOpen = false;
-
-    console.log("Navigate to ", page);
   }
 });

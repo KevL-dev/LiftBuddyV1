@@ -1,13 +1,13 @@
-import { loadHomePage } from "../frontend/pages/home.js";
-import { loadNewWorkoutPage } from "../frontend/pages/newWorkout.js";
-import { loadSettingsPage } from "../frontend/pages/settings.js";
-import { loadProfilePage } from "../frontend/pages/profile.js";
-import { loadRegisterPage } from "../frontend/pages/register.js";
-import { loadMenuPage } from "../frontend/pages/menu.js";
+import { loadHomePage } from "./pages/home.js";
+import { loadNewWorkoutPage } from "./pages/newWorkout.js";
+import { loadSettingsPage } from "./pages/settings.js";
+import { loadProfilePage } from "./pages/profile.js";
+import { loadRegisterPage } from "./pages/register.js";
+import { loadMenuPage } from "./pages/menu.js";
 import { loadLoginPage } from "./pages/login.js";
-import { loadNewPlanPage } from "../frontend/pages/newPlan.js";
-import { loadPlanDetailPage } from "../frontend/pages/planDetail.js";
-import { loadSessionDetailPage } from "../frontend/pages/sessionDetail.js";
+import { loadNewPlanPage } from "./pages/newPlan.js";
+import { loadPlanDetailPage } from "./pages/planDetail.js";
+import { loadSessionDetailPage } from "./pages/sessionDetail.js";
 
 window.__activePage = "init";
 
@@ -48,11 +48,9 @@ function checkLoginStatus() {
 
   if (!token) {
     document.getElementById("navbar").classList.add("hide");
-    console.log("No auth token found.");
     return { loggedIn: false };
-  } else if (token) {
+  } else {
     document.getElementById("navbar").classList.remove("hide");
-    console.log("Auth token found.");
     return { loggedIn: true };
   }
 }
