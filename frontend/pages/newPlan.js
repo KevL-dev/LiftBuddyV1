@@ -53,7 +53,7 @@ export async function loadNewPlanPage(contentEl) {
     exerciseSelect.innerHTML = exercises
       .map(
         (e) =>
-          `<option value="${e.id}">${e.name} (${e.muscle_group || "-"})</option>`,
+          `<option value="${e.id}">${escapeHtml(e.name)} (${escapeHtml(e.muscle_group) || "-"})</option>`,
       )
       .join("");
   } catch (err) {
@@ -69,7 +69,7 @@ export async function loadNewPlanPage(contentEl) {
       .map(
         (ex, idx) => `
         <li data-idx="${idx}">
-          <strong>${ex.name}</strong> — sets: ${ex.target_sets ?? "-"}, reps: ${ex.target_reps ?? "-"}
+          <strong>${escapeHtml(ex.name)}</strong> — sets: ${ex.target_sets ?? "-"}, reps: ${ex.target_reps ?? "-"}
           <button class="remove-ex btn-small">Remove</button>
         </li>
       `,
@@ -144,4 +144,12 @@ export async function loadNewPlanPage(contentEl) {
       alert("Error saving plan.");
     }
   });
+}
+
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }

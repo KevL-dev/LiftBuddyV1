@@ -83,16 +83,25 @@ router.post("/:workoutId/exercises", (req, res) => {
   if (!exercise_id)
     return res.status(400).json({ error: "exercise_id required" });
 
-  db.run(
-    `INSERT INTO workout_exercises (workout_id, exercise_id, sets, reps, weight)
-     VALUES (?, ?, ?, ?, ?)`,
-    [workoutId, exercise_id, sets || null, reps || null, weight || null],
-    function (err) {
-      if (err) {
-        console.error("POST /api/workouts/:id/exercises DB error:", err);
-        return res.status(500).json({ error: "Database error" });
-      }
-      res.json({ success: true, id: this.lastID });
+  db.get(
+    `SELECT id FROM workouts WHERE id = ? AND user_id = ?`,
+    [workoutId, req.user.id],
+    (err, workout) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (!workout) return res.status(403).json({ error: "Forbidden" });
+
+      db.run(
+        `INSERT INTO workout_exercises (workout_id, exercise_id, sets, reps, weight)
+         VALUES (?, ?, ?, ?, ?)`,
+        [workoutId, exercise_id, sets || null, reps || null, weight || null],
+        function (err) {
+          if (err) {
+            console.error("POST /api/workouts/:id/exercises DB error:", err);
+            return res.status(500).json({ error: "Database error" });
+          }
+          res.json({ success: true, id: this.lastID });
+        },
+      );
     },
   );
 });
@@ -104,59 +113,72 @@ router.delete("/:id", (req, res) => {
     return res.status(400).json({ error: "Workout-ID missing" });
   }
 
-  db.serialize(() => {
-    db.run(
-      "DELETE FROM workout_exercises WHERE workout_id = ?",
-      [workoutId],
-      function (err) {
-        if (err) {
-          console.error("Delete workout_exercises error:", err);
-          return res
-            .status(500)
-            .json({ error: "Fehler beim Löschen der Übungen" });
-        }
+  db.get(
+    "SELECT id FROM workouts WHERE id = ? AND user_id = ?",
+    [workoutId, req.user.id],
+    (err, workout) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (!workout) return res.status(404).json({ error: "Workout not found" });
 
+      db.serialize(() => {
         db.run(
-          "DELETE FROM workouts WHERE id = ? AND user_id = ?",
-          [workoutId, req.user.id],
+          "DELETE FROM workout_exercises WHERE workout_id = ?",
+          [workoutId],
           function (err) {
             if (err) {
-              console.error("Delete workout error:", err);
-              return res.status(500).json({ error: "Error deleting workout" });
+              console.error("Delete workout_exercises error:", err);
+              return res
+                .status(500)
+                .json({ error: "Fehler beim Löschen der Übungen" });
             }
 
-            if (this.changes === 0) {
-              return res.status(404).json({ error: "Workout not found" });
-            }
-
-            res.json({ success: true });
+            db.run(
+              "DELETE FROM workouts WHERE id = ? AND user_id = ?",
+              [workoutId, req.user.id],
+              function (err) {
+                if (err) {
+                  console.error("Delete workout error:", err);
+                  return res.status(500).json({ error: "Error deleting workout" });
+                }
+                res.json({ success: true });
+              },
+            );
           },
         );
-      },
-    );
-  });
+      });
+    },
+  );
 });
 
 router.put("/:workoutId/exercises/:id", (req, res) => {
   const { workoutId, id } = req.params;
   const { sets, reps, weight } = req.body;
 
-  db.run(
-    `UPDATE workout_exercises
-    SET sets = ?, reps = ?, weight = ?
-    WHERE id = ? AND workout_id = ?`,
-    [sets, reps, weight, id, workoutId],
-    function (err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Update failed" });
-      }
+  db.get(
+    `SELECT id FROM workouts WHERE id = ? AND user_id = ?`,
+    [workoutId, req.user.id],
+    (err, workout) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (!workout) return res.status(403).json({ error: "Forbidden" });
 
-      if (this.changes === 0) {
-        return res.status(404).json({ error: "Exercise not found" });
-      }
+      db.run(
+        `UPDATE workout_exercises
+        SET sets = ?, reps = ?, weight = ?
+        WHERE id = ? AND workout_id = ?`,
+        [sets, reps, weight, id, workoutId],
+        function (err) {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Update failed" });
+          }
 
-      res.json({ success: true });
+          if (this.changes === 0) {
+            return res.status(404).json({ error: "Exercise not found" });
+          }
+
+          res.json({ success: true });
+        },
+      );
     },
   );
 });

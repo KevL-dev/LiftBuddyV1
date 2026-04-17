@@ -41,8 +41,8 @@ export async function loadNewWorkoutPage(contentEl) {
     exerciseSelect.innerHTML = exercises
       .map(
         (e) =>
-          `<option value="${e.id}">${e.name} (${
-            e.muscle_group || "-"
+          `<option value="${e.id}">${escapeHtml(e.name)} (${
+            escapeHtml(e.muscle_group) || "-"
           })</option>`
       )
       .join("");
@@ -59,7 +59,7 @@ export async function loadNewWorkoutPage(contentEl) {
       .map(
         (ex, idx) => `
       <li data-idx="${idx}">
-        <strong>${ex.name}</strong> — sets: ${ex.sets ?? "-"}, reps: ${
+        <strong>${escapeHtml(ex.name)}</strong> — sets: ${ex.sets ?? "-"}, reps: ${
           ex.reps ?? "-"
         }, weight: ${ex.weight ?? "-"}
         <button class="remove-ex btn-small">Entfernen</button>
@@ -136,4 +136,12 @@ export async function loadNewWorkoutPage(contentEl) {
         alert("Fehler beim Speichern des Workouts.");
       }
     });
+}
+
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
