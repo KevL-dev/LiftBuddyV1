@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database");
+const requireAuth = require("../middleware/requireAuth");
 
 router.get("/", (req, res) => {
   db.all("SELECT * FROM exercises ORDER BY name", [], (err, rows) => {
@@ -12,7 +13,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post("/", (req, res) => {
+router.post("/", requireAuth, (req, res) => {
   const { name, muscle_group } = req.body;
   if (!name) return res.status(400).json({ error: "Name required" });
 
